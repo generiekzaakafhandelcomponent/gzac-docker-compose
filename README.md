@@ -1,7 +1,7 @@
 # Getting started
 ## Prerequisites
-- [Docker Desktop]https://docs.docker.com/desktop/install/
-- [Docker Compose]https://docs.docker.com/compose/install/
+- [Docker Desktop](https://docs.docker.com/desktop/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Starting up
 - Choose the correct Docker Compose file based on your requirements
