@@ -5,8 +5,9 @@
 
 ## Running Docker Compose
 The zgw-platform.yaml file contains all 'Zaakgericht werken'-services relevant to GZAC. By default, this file is used by Docker Compose.
-When starting GZAC as applications, only this file is needed to start up the supporting services:
+When starting GZAC as applications, only this file is needed to start up the supporting services. 
+Execute the following command in a terminal:
 ```docker compose up -d```
 
-When starting GZAC as Docker Containers, the gzac.yaml file should be executed as well. This can be done by combining the files into one command:
+When starting GZAC as Docker Containers, the gzac.yaml file should be executed as well. This can be done by combining the files into one command. Execute the following command in a terminal:
 ```docker compose -f zgw-platform.yaml -f gzac.yaml up -d```
