@@ -8,7 +8,7 @@
 |:----------------------------|:------------------------------------|
 | keycloak-and-mysql.yml      | Keycloak and MySQL                  |
 | openzaak-with-demo-data.yml | Open Zaak, Postgis (DB) and Redis   |
-| objects-with-demo-data.yml  | Open Zaak, Postgis (DB) and Redis   |
+| objects-with-demo-data.yml  | Objects API, Objecttypes API, Postgis (DB) and Postgres (DB)   |
 
 - Choose the correct Docker Compose file(s) based on your requirements
 - Run the following command from a terminal in the project root: 
