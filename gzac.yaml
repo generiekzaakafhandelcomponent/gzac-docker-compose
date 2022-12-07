@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   gzac_backend:
-    image: ritense/gzac-backend:9.24.0.RELEASE
+    image: ritense/gzac-backend:9.25.0.RELEASE
     container_name: gzac_backend
     ports:
       - 8080:8080
@@ -21,7 +21,7 @@ services:
       - KEYCLOAK_RESOURCE=valtimo-user-m2m-client
       - KEYCLOAK_CREDENTIALS_SECRET=3ce18f4c-6506-42cf-8e0d-3f98b88635e3
   gzac_frontend:
-    image: ritense/gzac-frontend:5.13.0
+    image: ritense/gzac-frontend:5.14.0
     container_name: gzac_frontend
     ports:
       - 80:80
