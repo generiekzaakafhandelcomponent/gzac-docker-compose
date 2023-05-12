@@ -16,7 +16,7 @@ The following services will be started:
 | Service   |      Mapped port      |
 |----------|:-------------:|
 | GZAC database (postgres) |  54320         |
-| Keycloak |  8082         |
+| Keycloak |  8081         |
 | Keycloak database (postgres) |    -   |
 | Open Zaak | 8001 |
 | Open Zaak database (postgis) | - |
@@ -31,5 +31,5 @@ Execute the following command: `docker compose up -d`
 | Service   |      Mapped port      |
 |----------|:-------------:|
 | GZAC database (postgres) |  54320         |
-| Keycloak |  8082         |
+| Keycloak |  8081         |
 | Keycloak database (postgres) |    -   |
