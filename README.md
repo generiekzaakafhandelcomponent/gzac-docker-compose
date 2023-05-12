@@ -1,16 +1,35 @@
-# Getting started
-## Prerequisites
+# gzac-docker-compose
+## Getting started
+### Requirements
 - [Docker Desktop](https://docs.docker.com/desktop/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Running Docker Compose
+### Starting up
+This repository offers two options for starting up the supporting services for GZAC:
+- Including all ZGW related services, like Open Zaak, Objects API and Objecttypes API
+- Keycloak and database only
 
-### Starting your own GZAC implementation
-The zgw-platform.yaml file contains all 'Zaakgericht werken'-services relevant to GZAC. By default, this file is used by Docker Compose.
-When creating a new GZAC implementation, only this file is needed to start up the supporting services. 
-Execute the following command in a terminal:
-```docker compose up -d```
+### Including all ZGW related services
+Execute the following command: `docker compose --profile zgw up -d`
 
-### Start as Docker containers
-When starting GZAC as Docker Containers, both the zgw-platform.yaml and the gzac.yaml file should be used. This can be done by combining the files into one command. Execute the following command in a terminal:
-```docker compose -f zgw-platform.yaml -f gzac.yaml up -d```
+The following services will be started:
+| Service   |      Mapped port      |
+|----------|:-------------:|
+| GZAC database (postgres) |  54320         |
+| Keycloak |  8082         |
+| Keycloak database (postgres) |    -   |
+| Open Zaak | 8001 |
+| Open Zaak database (postgis) | - |
+| Objecten API | 8010 |
+| Objecten API database (postgis) | - |
+| Objecttypen API | 8011 |
+| Objecttypen API database (postgres) | - |
+| Redis | - |
+
+### Keycloak and database only
+Execute the following command: `docker compose up -d`
+| Service   |      Mapped port      |
+|----------|:-------------:|
+| GZAC database (postgres) |  54320         |
+| Keycloak |  8082         |
+| Keycloak database (postgres) |    -   |
