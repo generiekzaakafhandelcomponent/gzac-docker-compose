@@ -44,7 +44,7 @@ services:
 
   #zgw
   openzaak:
-      image: openzaak/open-zaak:1.7.5
+      image: openzaak/open-zaak:1.8.2
       container_name: openzaak
       platform: linux/amd64
       profiles:
@@ -65,6 +65,7 @@ services:
           - OPENZAAK_SUPERUSER_EMAIL=admin@admin.org
           - DJANGO_SUPERUSER_PASSWORD=admin
           - SENDFILE_BACKEND=django_sendfile.backends.simple
+          - NOTIFICATIONS_DISABLED=true
       ports:
           - "8001:8000"
       depends_on:
