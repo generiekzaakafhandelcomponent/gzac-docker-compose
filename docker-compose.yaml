@@ -114,7 +114,8 @@ services:
       container_name: openzaak-database
       platform: linux/amd64
       profiles:
-          - gzac
+          - zgw
+          - openzaak
       environment:
           - POSTGRES_USER=openzaak
           - POSTGRES_PASSWORD=openzaak
