@@ -20,11 +20,11 @@ The following services will be started:
 | Keycloak database (postgres) |    -   |
 | Open Zaak | 8001 |
 | Open Zaak database (postgis) | - |
+| Open Zaak Redis | - |
 | Objecten API | 8010 |
 | Objecten API database (postgis) | - |
 | Objecttypen API | 8011 |
 | Objecttypen API database (postgres) | - |
-| Redis | - |
 
 ### Keycloak and database only
 Execute the following command: `docker compose up -d`
