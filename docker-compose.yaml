@@ -68,12 +68,12 @@ services:
       volumes:
           - gzac-database-data-mysql:/var/lib/mysql # persist data even if container shuts down
 
-  valtimo-rabbitmq:
+  gzac-rabbitmq:
       image: rabbitmq:3-management
-      container_name: valtimo-rabbitmq
+      container_name: gzac-rabbitmq
       volumes:
-          - ./imports/valtimo-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-          - ./imports/valtimo-rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+          - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+          - ./imports/gzac-rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
       ports:
           - "5672:5672"
           - "15672:15672"
