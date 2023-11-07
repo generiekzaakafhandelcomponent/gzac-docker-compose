@@ -42,7 +42,7 @@ services:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: gzac
       volumes:
-          - valtimo-database-data:/var/lib/postgres # persist data even if container shuts down
+          - gzac-database-data:/var/lib/postgres # persist data even if container shuts down
 
   gzac-database-mysql:
       container_name: gzac-database-mysql
