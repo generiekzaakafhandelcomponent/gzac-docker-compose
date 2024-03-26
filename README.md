@@ -13,6 +13,7 @@ This repository offers two options for starting up the supporting services for G
 Execute the following command: `docker compose --profile zgw up -d`
 
 The following services will be started:
+
 | Service                    | Mapped port |
 |----------------------------|:-----------:|
 | gzac-database              | 54320       |
@@ -39,6 +40,7 @@ The following services will be started:
 
 ### Keycloak and database only
 Execute the following command: `docker compose up -d`
+
 | Service                    | Mapped port |
 |----------------------------|:-----------:|
 | gzac-database              | 54320       |
