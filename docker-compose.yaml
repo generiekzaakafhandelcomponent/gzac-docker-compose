@@ -305,7 +305,7 @@ services:
       image: postgres:14.1
       container_name: open-forms-database
       profiles:
-          - zgw
+          - openformulieren
       ports:
           - "54322:5432"
       environment:
@@ -318,14 +318,14 @@ services:
       image: redis:6.2.6
       container_name: open-forms-redis
       profiles:
-          - zgw
+          - openformulieren
 
   open-forms-web:
       image: openformulieren/open-forms:2.0.3
       container_name: open-forms-web
       platform: linux/amd64
       profiles:
-          - zgw
+          - openformulieren
       environment: &web_env
           - CORS_ALLOW_ALL_ORIGINS=true
           - DJANGO_SETTINGS_MODULE=openforms.conf.docker
@@ -358,7 +358,7 @@ services:
       container_name: open-forms-celery
       platform: linux/amd64
       profiles:
-          - zgw
+          - openformulieren
       environment: *web_env
       command: /celery_worker.sh
       volumes:
@@ -372,7 +372,7 @@ services:
       container_name: open-forms-celery-beat
       platform: linux/amd64
       profiles:
-          - zgw
+          - openformulieren
       environment: *web_env
       command: /celery_beat.sh
       depends_on:
@@ -384,7 +384,7 @@ services:
       container_name: open-forms-celery-flower
       platform: linux/amd64
       profiles:
-          - zgw
+          - openformulieren
       environment: *web_env
       ports:
           - "5555:5555"
@@ -396,7 +396,7 @@ services:
       image: busybox:1.34.1
       container_name: open-forms-busybox
       profiles:
-          - zgw
+          - openformulieren
       command: /bin/chown -R 1000 /private_media
       volumes:
           - ./imports/open-formulieren/private_media:/private_media
@@ -406,7 +406,7 @@ services:
       container_name: open-klant
       platform: linux/amd64
       profiles:
-          - zgw
+          - openklantv1
       environment:
           - DJANGO_SETTINGS_MODULE=openklant.conf.docker
           - SECRET_KEY=${SECRET_KEY:-django-insecure-$$8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
@@ -426,7 +426,7 @@ services:
       image: postgres:14.1
       container_name: open-klant-database
       profiles:
-          - zgw
+          - openklantv1
       ports:
           - "54323:5432"
       environment:
@@ -439,7 +439,7 @@ services:
       image: redis:6.2.6
       container_name: open-klant-redis
       profiles:
-          - zgw
+          - openklantv1
 
 volumes:
   gzac-database-data:
