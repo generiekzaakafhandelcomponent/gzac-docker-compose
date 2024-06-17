@@ -429,7 +429,7 @@
     "firstName" : "Asha",
     "lastName" : "Miller",
     "email" : "admin@example.com",
-    "emailVerified" : false,
+    "emailVerified" : true,
     "createdTimestamp" : 1628668592363,
     "enabled" : true,
     "totp" : false,
@@ -437,8 +437,38 @@
       "id" : "74f462c7-f2a8-4f9f-ab1e-8d7666244ac5",
       "type" : "password",
       "createdDate" : 1628668665101,
-      "secretData" : "{\"value\":\"al4DXqa5ts1/kRFo/CD/2iDvPNJvbt06p9F+gRlOFng3rB+w0fAiDAdD/mE+G+GqRtvq9xqoFr2RHI/BPQGA0Q==\",\"salt\":\"bOrAHGf5DJgNTeHb1cZbew==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"KS++hmY0SuUg54rDZFeYUZnvDLUxsT6BWGolDUFZXwKLsAdn9MlyTZ0L3o/ZqbmuIMCbhHcQ0bmWKN/51VDYgQ==\",\"salt\":\"C8u6wkV06uwk4RlG4UoPHw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_ADMIN", "ROLE_USER", "default-roles-valtimo" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "59d9f86b-8dfa-4f1f-990a-a65d379c88ed",
+    "username" : "admin-mfa",
+    "firstName" : "Rosa",
+    "lastName" : "Becker",
+    "email" : "admin-mfa@example.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1718628463142,
+    "enabled" : true,
+    "totp" : true,
+    "credentials" : [ {
+      "id" : "5cbb53d5-d5d9-40f7-a314-60b3a3c989dc",
+      "type" : "password",
+      "userLabel" : "",
+      "createdDate" : 1718628692043,
+      "secretData" : "{\"value\":\"/eBF+Uz7ZED8OCgWkeEAl8H+5s2iUeIz2HipPNCtM8CoR2WiMWRmLVAt3wnLcsqovhaayIabCkwER4XHWMLQgw==\",\"salt\":\"bYvr4VoucSgF075WG2vLQQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    }, {
+      "id" : "d9c84b39-57f1-4cf3-a643-1b65e96148c9",
+      "type" : "otp",
+      "userLabel" : "",
+      "createdDate" : 1718629501532,
+      "secretData" : "{\"value\":\"iqOmhM8o8peCDCLS59hf\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -451,7 +481,7 @@
     "firstName" : "Morgan",
     "lastName" : "Finch",
     "email" : "developer@example.com",
-    "emailVerified" : false,
+    "emailVerified" : true,
     "createdTimestamp" : 1628668771639,
     "enabled" : true,
     "totp" : false,
@@ -459,8 +489,38 @@
       "id" : "c6ce7e0d-2d21-4fef-a498-67b5f1ab8b52",
       "type" : "password",
       "createdDate" : 1628668805173,
-      "secretData" : "{\"value\":\"LZWON9H6kUxVaA/OL9mzi4gy3xLxs3qYyVQ346Cjy+++6wuuHJSCxAUMfd8hdCBKjbsPXd5IrC4FmyRQh319tw==\",\"salt\":\"bfEMDKKn/8gpEEus/6LqYQ==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"kPDAuyQC1GRjqrkiCtIYHtWrnLt9fbYTO6e2TBUx3usunp+gTUd3n6qw7rAPXzL1TlHcVbk7D6YnvE5JM+WWKg==\",\"salt\":\"5L7wFnJ5D3RWAkNH2T48pQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_ADMIN", "ROLE_USER", "ROLE_DEVELOPER", "default-roles-valtimo" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "3045e6bc-0796-4f67-a5ad-0fb9fbd14abc",
+    "username" : "developer-mfa",
+    "firstName" : "Joshua",
+    "lastName" : "Hart",
+    "email" : "developer-mfa@example.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1718628572090,
+    "enabled" : true,
+    "totp" : true,
+    "credentials" : [ {
+      "id" : "2f0876a7-7b7a-4186-8577-29cb41bd00d4",
+      "type" : "password",
+      "userLabel" : "",
+      "createdDate" : 1718628720180,
+      "secretData" : "{\"value\":\"N3MMMavBkFr9pQBuRd2/HCLZsoy0iLJquKEp7UAlJKKKKF12JNXkzwxB0ty2yEf6t/CsgsPjV+xEa8iiO/PxGg==\",\"salt\":\"E0PAJJytJZCkCLn+baki5g==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    }, {
+      "id" : "eb8f0f4c-d1a9-48d5-8f26-9147a0969b0d",
+      "type" : "otp",
+      "userLabel" : "",
+      "createdDate" : 1718629602671,
+      "secretData" : "{\"value\":\"4Ftf6E0IAAHJAzzLGzlq\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -490,7 +550,7 @@
     "firstName" : "James",
     "lastName" : "Vance",
     "email" : "user@example.com",
-    "emailVerified" : false,
+    "emailVerified" : true,
     "createdTimestamp" : 1628521890031,
     "enabled" : true,
     "totp" : false,
@@ -498,14 +558,44 @@
       "id" : "0f01c33f-9631-4ae0-bb2b-ef2b8b07b43d",
       "type" : "password",
       "createdDate" : 1628522168278,
-      "secretData" : "{\"value\":\"+mjiiRYy50fKuxDsV30ALz+dSJ4d+kW4Ia1jbjkrboEb+3G3qeyVB1Xi38QrpDbHu36Q8KuPXoqJq/RYIYdvBg==\",\"salt\":\"+namf40gStzYJj/Y1YtyBQ==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"BNeODzlJda7HmVBcvEOtdR2MCQbdFLrF+s8esumJRRPmeZ+7+PQzCDT3NJwh6VQXnx38HceDkhQqoPEl+0c10Q==\",\"salt\":\"VPcGyLNgGHlM4Kt7MwNmOw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "ROLE_USER", "default-roles-valtimo" ],
     "notBefore" : 0,
     "groups" : [ "/test-group" ]
+  }, {
+    "id" : "04f49c10-5757-4d0e-8bf0-f7acc582b288",
+    "username" : "user-mfa",
+    "firstName" : "Sebastian",
+    "lastName" : "Barnes",
+    "email" : "user-mfa@example.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1718628650181,
+    "enabled" : true,
+    "totp" : true,
+    "credentials" : [ {
+      "id" : "4d0aed7e-66b9-46bd-843b-1c11639b2da1",
+      "type" : "password",
+      "userLabel" : "",
+      "createdDate" : 1718628735758,
+      "secretData" : "{\"value\":\"0+bDNqBOtyPyM8VKQHYxA7DaT8XrkZBYPvAGygRODwYP6xfN6OjK2PEzCcHxKF9l73dbbi+28Xequ6HF0GfDsw==\",\"salt\":\"no76sOoUrQ4KlLNFjThEyg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    }, {
+      "id" : "c94288e9-38c8-4a26-bdaf-e77f83a3d074",
+      "type" : "otp",
+      "userLabel" : "",
+      "createdDate" : 1718629642879,
+      "secretData" : "{\"value\":\"VmKxrn8apFf1jhlM5rxB\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_USER", "default-roles-valtimo" ],
+    "notBefore" : 0,
+    "groups" : [ ]
   } ],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
@@ -878,7 +968,8 @@
       "config" : {
         "id.token.claim" : "true",
         "access.token.claim" : "true",
-        "introspection.token.claim" : "true"
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true"
       }
     } ]
   }, {
@@ -1392,7 +1483,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper" ]
       }
     }, {
       "id" : "6f87d388-7ae1-4cbc-afde-ac8b49249e67",
@@ -1401,7 +1492,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "saml-user-property-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "saml-role-list-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     }, {
       "id" : "fbf328c2-a19e-4ffd-a59e-cfc8aa517a68",

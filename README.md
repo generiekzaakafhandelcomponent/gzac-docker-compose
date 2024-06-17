@@ -49,3 +49,19 @@ Execute the following command: `docker compose up -d`
 | gzac-keycloak              | 8081        |
 | gzac-rabbitmq              | 15672       |
 | gzac-rabbitmq              | 5672        |
+
+### Default users in the Valtimo realm
+| Username      | password  | ROLES                                 | OTP-URL                                                                                                                       |
+|---------------|-----------|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| user          | user      | ROLE_USER                             |                                                                                                                               |
+| user-mfa      | user      | ROLE_USER                             | otpauth://totp/Valtimo:user-mfa?secret=KZWUW6DSNY4GC4CGMYYWU2DMJU2XE6CC&digits=6&algorithm=SHA1&issuer=Valtimo&period=30      |
+| admin         | admin     | ROLE_USER, ROLE_ADMIN                 |                                                                                                                               |
+| admin-mfa     | admin     | ROLE_USER, ROLE_ADMIN                 | otpauth://totp/Valtimo:admin-mfa?secret=NFYU63LIJU4G6ODQMVBUIQ2MKM2TS2DG&digits=6&algorithm=SHA1&issuer=Valtimo&period=30     |
+| developer     | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER |                                                                                                                               |
+| developer-mfa | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER | otpauth://totp/Valtimo:developer-mfa?secret=GRDHIZRWIUYESQKBJBFEC6T2JRDXU3DR&digits=6&algorithm=SHA1&issuer=Valtimo&period=30 |
+
+
+
+
+
+
