@@ -393,13 +393,13 @@
   },
   "requiredCredentials" : [ "password" ],
   "otpPolicyType" : "totp",
-  "otpPolicyAlgorithm" : "HmacSHA1",
+  "otpPolicyAlgorithm" : "HmacSHA256",
   "otpPolicyInitialCounter" : 0,
   "otpPolicyDigits" : 6,
   "otpPolicyLookAheadWindow" : 1,
   "otpPolicyPeriod" : 30,
   "otpPolicyCodeReusable" : false,
-  "otpSupportedApplications" : [ "totpAppFreeOTPName", "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName" ],
+  "otpSupportedApplications" : [ "totpAppFreeOTPName" ],
   "localizationTexts" : { },
   "webAuthnPolicyRpEntityName" : "keycloak",
   "webAuthnPolicySignatureAlgorithms" : [ "ES256" ],
@@ -463,12 +463,12 @@
       "secretData" : "{\"value\":\"/eBF+Uz7ZED8OCgWkeEAl8H+5s2iUeIz2HipPNCtM8CoR2WiMWRmLVAt3wnLcsqovhaayIabCkwER4XHWMLQgw==\",\"salt\":\"bYvr4VoucSgF075WG2vLQQ==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
     }, {
-      "id" : "d9c84b39-57f1-4cf3-a643-1b65e96148c9",
+      "id" : "4a1f1cb6-31b6-4850-b9bf-aba1943747d1",
       "type" : "otp",
       "userLabel" : "",
-      "createdDate" : 1718629501532,
-      "secretData" : "{\"value\":\"iqOmhM8o8peCDCLS59hf\"}",
-      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
+      "createdDate" : 1718698532734,
+      "secretData" : "{\"value\":\"HnlHWidyISaIPmwb8j3P\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA256\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -515,12 +515,12 @@
       "secretData" : "{\"value\":\"N3MMMavBkFr9pQBuRd2/HCLZsoy0iLJquKEp7UAlJKKKKF12JNXkzwxB0ty2yEf6t/CsgsPjV+xEa8iiO/PxGg==\",\"salt\":\"E0PAJJytJZCkCLn+baki5g==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
     }, {
-      "id" : "eb8f0f4c-d1a9-48d5-8f26-9147a0969b0d",
+      "id" : "ba9e50db-88f0-438c-bf64-3ea06a4df861",
       "type" : "otp",
       "userLabel" : "",
-      "createdDate" : 1718629602671,
-      "secretData" : "{\"value\":\"4Ftf6E0IAAHJAzzLGzlq\"}",
-      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
+      "createdDate" : 1718698581312,
+      "secretData" : "{\"value\":\"GaTBeM6p33c5NH7Mc3vx\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA256\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -584,12 +584,12 @@
       "secretData" : "{\"value\":\"0+bDNqBOtyPyM8VKQHYxA7DaT8XrkZBYPvAGygRODwYP6xfN6OjK2PEzCcHxKF9l73dbbi+28Xequ6HF0GfDsw==\",\"salt\":\"no76sOoUrQ4KlLNFjThEyg==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
     }, {
-      "id" : "c94288e9-38c8-4a26-bdaf-e77f83a3d074",
+      "id" : "6e2102dc-70a4-4c7b-b8b9-ce57c58a2534",
       "type" : "otp",
       "userLabel" : "",
-      "createdDate" : 1718629642879,
-      "secretData" : "{\"value\":\"VmKxrn8apFf1jhlM5rxB\"}",
-      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
+      "createdDate" : 1718698624970,
+      "secretData" : "{\"value\":\"hxK3kwG19vz1MM4U7j1k\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA256\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -813,7 +813,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:4200*" ],
+    "redirectUris" : [ "http://localhost:4200/*", "http://localhost:8080/*" ],
     "webOrigins" : [ "http://localhost:4200" ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -1483,7 +1483,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper" ]
       }
     }, {
       "id" : "6f87d388-7ae1-4cbc-afde-ac8b49249e67",
@@ -1492,7 +1492,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "saml-role-list-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper" ]
       }
     }, {
       "id" : "fbf328c2-a19e-4ffd-a59e-cfc8aa517a68",
