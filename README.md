@@ -60,7 +60,7 @@ Execute the following command: `docker compose up -d`
 | developer     | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER |                                                                                                                                 |
 | developer-mfa | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER | otpauth://totp/Valtimo:developer-mfa?secret=I5QVIQTFJU3HAMZTMM2U4SBXJVRTG5TY&digits=6&algorithm=SHA256&issuer=Valtimo&period=30 |
 
-
+> NOTE: SHA-256 is used for TOTP. Please make sure your authenticator supports this.
 
 
 
