@@ -51,14 +51,14 @@ Execute the following command: `docker compose up -d`
 | gzac-rabbitmq              | 5672        |
 
 ### Default users in the Valtimo realm
-| Username      | password  | ROLES                                 | OTP-URL                                                                                                                       |
-|---------------|-----------|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| user          | user      | ROLE_USER                             |                                                                                                                               |
-| user-mfa      | user      | ROLE_USER                             | otpauth://totp/Valtimo:user-mfa?secret=KZWUW6DSNY4GC4CGMYYWU2DMJU2XE6CC&digits=6&algorithm=SHA1&issuer=Valtimo&period=30      |
-| admin         | admin     | ROLE_USER, ROLE_ADMIN                 |                                                                                                                               |
-| admin-mfa     | admin     | ROLE_USER, ROLE_ADMIN                 | otpauth://totp/Valtimo:admin-mfa?secret=NFYU63LIJU4G6ODQMVBUIQ2MKM2TS2DG&digits=6&algorithm=SHA1&issuer=Valtimo&period=30     |
-| developer     | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER |                                                                                                                               |
-| developer-mfa | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER | otpauth://totp/Valtimo:developer-mfa?secret=GRDHIZRWIUYESQKBJBFEC6T2JRDXU3DR&digits=6&algorithm=SHA1&issuer=Valtimo&period=30 |
+| Username      | password  | ROLES                                 | OTP-URL                                                                                                                         |
+|---------------|-----------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| user          | user      | ROLE_USER                             |                                                                                                                                 |
+| user-mfa      | user      | ROLE_USER                             | otpauth://totp/Valtimo:user-mfa?secret=NB4EWM3LO5DTCOLWPIYU2TJUKU3WUMLL&digits=6&algorithm=SHA256&issuer=Valtimo&period=30      |
+| admin         | admin     | ROLE_USER, ROLE_ADMIN                 |                                                                                                                                 |
+| admin-mfa     | admin     | ROLE_USER, ROLE_ADMIN                 | otpauth://totp/Valtimo:admin-mfa?secret=JBXGYSCXNFSHSSKTMFEVA3LXMI4GUM2Q&digits=6&algorithm=SHA256&issuer=Valtimo&period=30     |
+| developer     | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER |                                                                                                                                 |
+| developer-mfa | developer | ROLE_USER, ROLE_ADMIN, ROLE_DEVELOPER | otpauth://totp/Valtimo:developer-mfa?secret=I5QVIQTFJU3HAMZTMM2U4SBXJVRTG5TY&digits=6&algorithm=SHA256&issuer=Valtimo&period=30 |
 
 
 
