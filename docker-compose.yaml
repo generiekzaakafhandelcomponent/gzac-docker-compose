@@ -78,7 +78,7 @@ services:
   # ZGW
 
   openzaak:
-      image: openzaak/open-zaak:1.11.0
+      image: openzaak/open-zaak:1.13.0
       container_name: openzaak
       platform: linux/amd64
       profiles:
@@ -107,7 +107,7 @@ services:
           -   openzaak-redis
 
   openzaak-database:
-      image: mdillon/postgis:11
+      image: postgis/postgis:13-3.1
       container_name: openzaak-database
       platform: linux/amd64
       profiles:
