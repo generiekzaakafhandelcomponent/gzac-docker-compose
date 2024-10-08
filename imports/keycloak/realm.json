@@ -47,15 +47,17 @@
   "failureFactor" : 30,
   "roles" : {
     "realm" : [ {
-      "id" : "0e3581fe-1901-49f2-8fb4-0a57c1d1053f",
-      "name" : "ROLE_ADMIN",
+      "id" : "241b52e4-00b8-4227-9fbc-fcb3a9ce7220",
+      "name" : "ROLE_EXTRA3",
+      "description" : "",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "valtimo",
       "attributes" : { }
     }, {
-      "id" : "b8feef22-2fe3-4536-b624-89d76bdc9e06",
-      "name" : "ROLE_USER",
+      "id" : "348b4096-b013-4b21-a1e1-0236f02a1837",
+      "name" : "ROLE_EXTRA2",
+      "description" : "",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "valtimo",
@@ -68,16 +70,16 @@
       "containerId" : "valtimo",
       "attributes" : { }
     }, {
-      "id" : "0b60197e-6a2f-477d-8e31-14dc804e032f",
-      "name" : "offline_access",
-      "description" : "${role_offline-access}",
+      "id" : "29679a05-2863-4cb1-be3c-8fb0b84803dd",
+      "name" : "ROLE_DEVELOPER",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "valtimo",
       "attributes" : { }
     }, {
-      "id" : "29679a05-2863-4cb1-be3c-8fb0b84803dd",
-      "name" : "ROLE_DEVELOPER",
+      "id" : "8f807939-abed-4b65-9eef-19a9d8f291f3",
+      "name" : "ROLE_EXTRA8",
+      "description" : "",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "valtimo",
@@ -86,6 +88,68 @@
       "id" : "71976567-aa66-40ea-b45d-ef5b82df4586",
       "name" : "uma_authorization",
       "description" : "${role_uma_authorization}",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "0e3581fe-1901-49f2-8fb4-0a57c1d1053f",
+      "name" : "ROLE_ADMIN",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "45d34171-3c2e-45e9-8da2-a093603329ab",
+      "name" : "ROLE_EXTRA4",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "01f280e5-5dc5-46b2-8f7c-9985e853afe2",
+      "name" : "ROLE_EXTRA5",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "6b81083e-91ba-4d8f-bfed-755955c204b6",
+      "name" : "ROLE_EXTRA7",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "fd4271a9-d4ff-4e78-adc5-1c9fce7d3cb1",
+      "name" : "ROLE_EXTRA1",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "b8feef22-2fe3-4536-b624-89d76bdc9e06",
+      "name" : "ROLE_USER",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "28cae21b-9e03-4c6b-b759-53b80b61acc1",
+      "name" : "ROLE_EXTRA6",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "valtimo",
+      "attributes" : { }
+    }, {
+      "id" : "0b60197e-6a2f-477d-8e31-14dc804e032f",
+      "name" : "offline_access",
+      "description" : "${role_offline-access}",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "valtimo",
@@ -528,6 +592,59 @@
     "notBefore" : 0,
     "groups" : [ ]
   }, {
+    "id" : "77244264-1df7-49f1-b6e0-33fd93f4687c",
+    "username" : "extra-roles",
+    "firstName" : "Francis",
+    "lastName" : "Davies",
+    "email" : "extra-roles@example.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1728302160210,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "ed5f9426-8c5a-4b96-980a-1d6a3c985745",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1728302171105,
+      "secretData" : "{\"value\":\"No8Vz5RG3YsHPaeO6z8BjEvT3TFMAV5pk7biN8rOpbFqMyIuPZXiSrWY7N0POwy+KWKoto+a+flts/Lev4q9iQ==\",\"salt\":\"SbLABRk4smcxiebVmMfhaA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_EXTRA3", "ROLE_EXTRA2", "ROLE_EXTRA4", "ROLE_EXTRA5", "ROLE_EXTRA7", "ROLE_ADMIN", "ROLE_EXTRA1", "ROLE_USER", "ROLE_EXTRA6", "ROLE_EXTRA8", "ROLE_DEVELOPER", "default-roles-valtimo" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "76a4d853-71d9-4adf-8b70-525bdf18751d",
+    "username" : "extra-roles-mfa",
+    "firstName" : "Jane",
+    "lastName" : "Reed",
+    "email" : "extra-roles-mfa@example.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1728303172732,
+    "enabled" : true,
+    "totp" : true,
+    "credentials" : [ {
+      "id" : "cb9cb49a-a123-4d50-b463-430d011e78d9",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1728303197680,
+      "secretData" : "{\"value\":\"ERTiO18ZBFvnmyUJWdHEYS9B/Rdt9zXPCirjJJfUdRfosIz4WdPydflPiA8dkIeuw2AzZvVxvu4tGhscI2pEUA==\",\"salt\":\"uaJcpGBn3PcMoB8sO/qYtQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    }, {
+      "id" : "4b81d372-8fad-474e-8ae0-bdcb61d99bf5",
+      "type" : "otp",
+      "userLabel" : "Test",
+      "createdDate" : 1728303759389,
+      "secretData" : "{\"value\":\"NvmpbjcSpRTwHjEPIyzQ\"}",
+      "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_EXTRA3", "ROLE_ADMIN", "ROLE_EXTRA2", "ROLE_EXTRA4", "ROLE_EXTRA5", "ROLE_EXTRA7", "ROLE_EXTRA1", "ROLE_USER", "ROLE_EXTRA6", "ROLE_DEVELOPER", "ROLE_EXTRA8", "default-roles-valtimo" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "49b83f69-6612-48c6-ba71-c5551a876ec3",
     "username" : "service-account-valtimo-user-m2m-client",
     "emailVerified" : false,
@@ -813,7 +930,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:4200/*", "http://localhost:8080/*" ],
+    "redirectUris" : [ "http://localhost:8080/*", "http://localhost:4200/*" ],
     "webOrigins" : [ "http://localhost:4200" ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -1483,7 +1600,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper" ]
       }
     }, {
       "id" : "6f87d388-7ae1-4cbc-afde-ac8b49249e67",
@@ -1492,7 +1609,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "saml-role-list-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper" ]
       }
     }, {
       "id" : "fbf328c2-a19e-4ffd-a59e-cfc8aa517a68",
