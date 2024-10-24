@@ -441,6 +441,45 @@ services:
       profiles:
           - openklantv1
 
+  gzac-backend:
+      image: ritense/gzac-backend:12.4.0
+      container_name: gzac-backend
+      profiles:
+          - gzac
+      environment:
+          - SPRING_PROFILES_ACTIVE=docker
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:54320/gzac
+          - SPRING_DATASOURCE_NAME=gzac
+          - SPRING_DATASOURCE_USERNAME=gzac
+          - SPRING_DATASOURCE_PASSWORD=password
+          - VALTIMO_APP_HOSTNAME=http://localhost:4200
+          - VALTIMO_CONNECTORENCRYPTION_SECRET=579156b12b9a457a579156b12b9a457a
+          - VALTIMO_OAUTH_PUBLIC_KEY=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAooyECQIi6v4TLKOYWwXClDhJcrGcGfKZj7LQIgY/Ajm2nAKv5kiZRoS8GzMzIGKkkilAJyWQCoKlP//azHqzIxO6WZWCqGFxd04vK5JYujsiMMTNvTggfFSM7VxbzU/wv+aAEvBaGUMYp2Oamn5szzYzkzsowujvDZp+CE8ryZWTVmA+8WZE4aoU6VzfXmMDmPxvRXvktPRsJkA7hkv65TTJwUZF38goRg62kRD0hOP1sIy6vwKDSkjafLV1bYNBRiWXNReJNBXauhy74GeiHODGrI62NwUJXSgZ62cViPt6cx/3A7VBPLpEPnpnlZcIDfsFpSUuNEXc7HoLRuldbQIDAQAB
+          - KEYCLOAK_REALM=valtimo
+          - KEYCLOAK_AUTH_SERVER_URL=http://host.docker.internal:8081/auth
+          - KEYCLOAK_RESOURCE=valtimo-user-m2m-client
+          - KEYCLOAK_CREDENTIALS_SECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
+          - VALTIMO_WEB_CORS_PATHS=/**
+      ports:
+          - 8080:8080
+
+  gzac-frontend:
+      image: ritense/gzac-frontend:12.4.0
+      container_name: gzac-frontend
+      profiles:
+          - gzac
+      environment:
+          - API_URI=http://localhost:8080/api
+          - KEYCLOAK_URL=http://localhost:8081/auth
+          - KEYCLOAK_REALM=valtimo
+          - KEYCLOAK_CLIENT_ID=valtimo-console
+          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak
+          - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
+      ports:
+          - 80:8080
 volumes:
   gzac-database-data:
   gzac-database-data-mysql:
