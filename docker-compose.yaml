@@ -442,7 +442,7 @@ services:
           - openklantv1
 
   gzac-backend:
-      image: ritense/gzac-backend:12.4.0
+      image: ritense/gzac-backend:12.5.1
       container_name: gzac-backend
       profiles:
           - gzac
@@ -467,7 +467,7 @@ services:
           - 8080:8080
 
   gzac-frontend:
-      image: ritense/gzac-frontend:12.4.0
+      image: ritense/gzac-frontend:12.5.1
       container_name: gzac-frontend
       profiles:
           - gzac
