@@ -100,6 +100,7 @@ services:
           - DJANGO_SUPERUSER_PASSWORD=admin
           - SENDFILE_BACKEND=django_sendfile.backends.simple
           - NOTIFICATIONS_DISABLED=true
+          - DISABLE_2FA=True
       ports:
           - "8001:8000"
       depends_on:
