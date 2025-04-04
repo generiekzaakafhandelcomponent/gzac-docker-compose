@@ -442,7 +442,7 @@ services:
           - openklantv1
 
   gzac-backend:
-      image: ritense/gzac-backend:12.6.0
+      image: ritense/gzac-backend:12.10.0
       container_name: gzac-backend
       profiles:
           - gzac
@@ -467,7 +467,7 @@ services:
           - 8080:8080
 
   gzac-frontend:
-      image: ritense/gzac-frontend:12.6.0
+      image: ritense/gzac-frontend:12.10.0
       container_name: gzac-frontend
       profiles:
           - gzac
@@ -481,7 +481,7 @@ services:
       ports:
           - 80:8080
   gzac-demo-backend:
-      image: ritense/gzac-evenementenvergunning-demo-backend:12.6.0
+      image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
       container_name: gzac-backend
       profiles:
           - demo
@@ -506,7 +506,7 @@ services:
           - 8080:8080
 
   gzac-demo-frontend:
-      image: ritense/gzac-evenementenvergunning-demo-frontend:12.6.0
+      image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
       container_name: gzac-frontend
       profiles:
           - demo
