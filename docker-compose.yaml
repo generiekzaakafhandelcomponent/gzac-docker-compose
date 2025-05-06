@@ -5,7 +5,7 @@ services:
       container_name: gzac-keycloak
       depends_on:
           - gzac-keycloak-database
-      image: quay.io/keycloak/keycloak:24.0.1
+      image: quay.io/keycloak/keycloak:26.2.2
       ports:
           - "8081:8080"
       environment:
@@ -21,7 +21,7 @@ services:
           - ./imports/keycloak:/opt/keycloak/data/import
       command: "start-dev --import-realm"
   gzac-keycloak-database:
-      image: postgres:14.1
+      image: postgres:17.4
       container_name: gzac-keycloak-database
       ports:
           - "54329:5432"
@@ -31,7 +31,7 @@ services:
 
   gzac-database:
       container_name: gzac-database
-      image: postgres:14.1
+      image: postgres:17.4
       ports:
           - "54320:5432"
       environment:
@@ -66,7 +66,7 @@ services:
           - gzac-database-data-mysql:/var/lib/mysql # persist data even if container shuts down
 
   gzac-rabbitmq:
-      image: rabbitmq:3-management
+      image: rabbitmq:4.1.0-management
       container_name: gzac-rabbitmq
       volumes:
           - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -74,11 +74,16 @@ services:
       ports:
           - "5672:5672"
           - "15672:15672"
+      command: >
+          bash -c "
+            rabbitmq-plugins enable --offline rabbitmq_stream rabbitmq_stream_management &&
+            rabbitmq-server
+          "
 
   # ZGW
 
   openzaak:
-      image: openzaak/open-zaak:1.13.0
+      image: openzaak/open-zaak:1.20.0
       container_name: openzaak
       platform: linux/amd64
       profiles:
@@ -108,7 +113,7 @@ services:
           -   openzaak-redis
 
   openzaak-database:
-      image: postgis/postgis:13-3.1
+      image: postgis/postgis:17-3.4
       container_name: openzaak-database
       platform: linux/amd64
       profiles:
@@ -124,14 +129,14 @@ services:
           - ./imports/open-zaak:/docker-entrypoint-initdb.d
 
   openzaak-redis:
-      image: redis:6.2.6
+      image: redis:7.4.3
       container_name: openzaak-redis
       profiles:
           - zgw
           - openzaak
 
   objecten-api:
-      image: maykinmedia/objects-api:2.1.1
+      image: maykinmedia/objects-api:3.0.3
       container_name: objecten-api
       platform: linux/amd64
       profiles:
@@ -140,18 +145,33 @@ services:
       ports:
           - "8010:8000"
       environment: &objects-env
+          - DB_USER=objects
+          - DB_PASSWORD=objects
           - CORS_ALLOW_ALL_ORIGINS=true
           - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
           - DJANGO_SETTINGS_MODULE=objects.conf.docker
           - DB_HOST=objecten-api-database
           - DEBUG=true
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
-          - TWO_FACTOR_PATCH_ADMIN=False
+          - CACHE_DEFAULT=objecten-api-redis:6379/0
+          - CACHE_AXES=objecten-api-redis:6379/0
+          - DISABLE_2FA=True
+          - OBJECTS_SUPERUSER_EMAIL=admin@example.org
+          - OBJECTS_SUPERUSER_USERNAME=admin
+          - OBJECTS_SUPERUSER_PASSWORD=admin
       depends_on:
           - objecten-api-database
+      healthcheck:
+          test: ["CMD", "python", "-c", "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])"]
+          interval: 30s
+          timeout: 5s
+          retries: 3
+          # This should allow for enough time for migrations to run before the max
+          # retries have passed. This healthcheck in turn allows other containers
+          # to wait for the database migrations.
+          start_period: 30s
 
   objecten-api-database:
-      image: postgis/postgis:13-3.1
+      image: postgis/postgis:17-3.4
       container_name: objecten-api-database
       platform: linux/amd64
       profiles:
@@ -165,7 +185,7 @@ services:
           - POSTGRES_DB=objects
 
   objecten-api-import:
-      image: maykinmedia/objects-api:2.1.1
+      image: maykinmedia/objects-api:3.0.3
       container_name: objects-api-import
       platform: linux/amd64
       profiles:
@@ -178,10 +198,18 @@ services:
           - ./imports/objects-api/fixtures:/app/src/objects/fixtures
           - ./imports/objects-api/init:/app/init
       depends_on:
-          - objecten-api
+          objecten-api:
+              condition: service_healthy
+
+  objecten-api-redis:
+      image: redis:7.4.3
+      container_name: objecten-api-redis
+      profiles:
+          - zgw
+          - objecten
 
   objecttypen-api:
-      image: maykinmedia/objecttypes-api:2.1.0
+      image: maykinmedia/objecttypes-api:3.0.2
       container_name: objecttypen-api
       platform: linux/amd64
       profiles:
@@ -190,18 +218,33 @@ services:
       ports:
           - "8011:8000"
       environment: &objecttypes-env
+          - DB_USER=objecttypes
+          - DB_PASSWORD=objecttypes
           - CORS_ALLOW_ALL_ORIGINS=true
           - SECRET_KEY=${SECRET_KEY:-fgv=c0hz&tl*8*3m3893@m+1pstrvidc9e^5@fpspmg%cy$$15d}
           - DJANGO_SETTINGS_MODULE=objecttypes.conf.docker
           - DB_HOST=objecttypen-api-database
           - DEBUG=true
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
-          - TWO_FACTOR_PATCH_ADMIN=False
+          - CACHE_DEFAULT=objecttypen-api-redis:6379/0
+          - CACHE_AXES=objecttypen-api-redis:6379/0
+          - DISABLE_2FA=True
+          - OBJECTTYPE_SUPERUSER_EMAIL=admin@example.org
+          - OBJECTTYPE_SUPERUSER_USERNAME=admin
+          - OBJECTTYPE_SUPERUSER_PASSWORD=admin
       depends_on:
           - objecttypen-api-database
+      healthcheck:
+        test: ["CMD", "python", "-c", "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])"]
+        interval: 30s
+        timeout: 5s
+        retries: 3
+        # This should allow for enough time for migrations to run before the max
+        # retries have passed. This healthcheck in turn allows other containers
+        # to wait for the database migrations.
+        start_period: 30s
 
   objecttypen-api-database:
-      image: postgres:14.1
+      image: postgres:17.4
       container_name: objecttypen-api-database
       profiles:
           - zgw
@@ -214,7 +257,7 @@ services:
           - POSTGRES_DB=objecttypes
 
   objecttypen-api-import:
-      image: maykinmedia/objecttypes-api:2.1.0
+      image: maykinmedia/objecttypes-api:3.0.2
       container_name: objecttypen-api-import
       platform: linux/amd64
       profiles:
@@ -226,10 +269,18 @@ services:
           - ./imports/objecttypes-api/fixtures:/app/src/objecttypes/fixtures
           - ./imports/objecttypes-api/init:/app/init
       depends_on:
-          - objecttypen-api
+          objecttypen-api:
+              condition: service_healthy
+
+  objecttypen-api-redis:
+      image: redis:7.4.3
+      container_name: objecttypen-api-redis
+      profiles:
+          - zgw
+          - objecten
 
   open-notificaties-rabbitmq:
-      image: rabbitmq:3.9-management
+      image: rabbitmq:4.1.0-management
       container_name: open-notificaties-rabbitmq
       profiles:
           - zgw
@@ -238,7 +289,7 @@ services:
           - "15673:15672"
 
   open-notificaties-celery:
-      image: openzaak/open-notificaties:1.4.3
+      image: openzaak/open-notificaties:1.8.2
       container_name: open-notificaties
       platform: linux/amd64
       profiles:
@@ -262,6 +313,7 @@ services:
           - CELERY_LOGLEVEL=DEBUG
           - CELERY_WORKER_CONCURRENCY=${CELERY_WORKER_CONCURRENCY:-4}
           - SUBPATH=${SUBPATH:-/}
+          - DISABLE_2FA=True
       command: /celery_worker.sh
       depends_on:
           - open-notificaties-database
@@ -269,7 +321,7 @@ services:
           - open-notificaties-redis
 
   open-notificaties:
-      image: openzaak/open-notificaties:1.4.3
+      image: openzaak/open-notificaties:1.8.1
       container_name: open-notificaties-celery
       platform: linux/amd64
       profiles:
@@ -283,7 +335,7 @@ services:
           - open-notificaties-redis
 
   open-notificaties-database:
-      image: postgres:13.5  # open-notificaties doesn't work with postgres 14.
+      image: postgres:17.4  # open-notificaties doesn't work with postgres 14.
       container_name: open-notificaties-database
       profiles:
           - zgw
@@ -297,13 +349,13 @@ services:
           - ./imports/open-notificaties:/docker-entrypoint-initdb.d
 
   open-notificaties-redis:
-      image: redis:6.2.6
+      image: redis:7.4.3
       container_name: open-notificaties-redis
       profiles:
           - zgw
 
   open-forms-database:
-      image: postgres:14.1
+      image: postgres:17.4
       container_name: open-forms-database
       profiles:
           - openformulieren
@@ -316,13 +368,13 @@ services:
           - ./imports/open-formulieren:/docker-entrypoint-initdb.d
 
   open-forms-redis:
-      image: redis:6.2.6
+      image: redis:7.4.3
       container_name: open-forms-redis
       profiles:
           - openformulieren
 
   open-forms-web:
-      image: openformulieren/open-forms:2.0.3
+      image: openformulieren/open-forms:3.1.1
       container_name: open-forms-web
       platform: linux/amd64
       profiles:
@@ -355,7 +407,7 @@ services:
           - open-forms-database
 
   open-forms-celery:
-      image: openformulieren/open-forms:2.0.3
+      image: openformulieren/open-forms:3.1.1
       container_name: open-forms-celery
       platform: linux/amd64
       profiles:
@@ -369,7 +421,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-beat:
-      image: openformulieren/open-forms:2.0.3
+      image: openformulieren/open-forms:3.1.1
       container_name: open-forms-celery-beat
       platform: linux/amd64
       profiles:
@@ -381,7 +433,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-flower:
-      image: mher/flower:0.9.7
+      image: mher/flower:2.0.1
       container_name: open-forms-celery-flower
       platform: linux/amd64
       profiles:
@@ -394,7 +446,7 @@ services:
           - open-forms-celery
 
   open-forms-busybox:
-      image: busybox:1.34.1
+      image: busybox:1.37.0
       container_name: open-forms-busybox
       profiles:
           - openformulieren
@@ -403,7 +455,7 @@ services:
           - ./imports/open-formulieren/private_media:/private_media
 
   open-klant:
-      image: maykinmedia/open-klant:latest
+      image: maykinmedia/open-klant:2.7.0
       container_name: open-klant
       platform: linux/amd64
       profiles:
@@ -424,7 +476,7 @@ services:
           - open-klant-database
 
   open-klant-database:
-      image: postgres:14.1
+      image: postgres:17.4
       container_name: open-klant-database
       profiles:
           - openklantv1
@@ -437,7 +489,7 @@ services:
           - ./imports/open-klanten:/docker-entrypoint-initdb.d
 
   open-klant-redis:
-      image: redis:6.2.6
+      image: redis:7.4.3
       container_name: open-klant-redis
       profiles:
           - openklantv1
