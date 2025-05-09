@@ -5,17 +5,22 @@
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Starting up
-This repository offers two options for starting up the supporting services for GZAC:
+This repository offers different options for starting up the supporting services for GZAC:
 - Including all ZGW related services, like Open Zaak, Objects API and Objecttypes API
 - Keycloak and database only
 
+### Including GZAC demo data
+By using the `demo` profile instead of the `gzac` profile, the GZAC service will include a few demo cases: `docker compose --profile demo up -d`
+
 ### Including all ZGW related services
-Execute the following command: `docker compose --profile zgw up -d`
+Execute the following command: `docker compose --profile gzac --profile zgw up -d` or `docker compose --profile demo --profile zgw up -d`
 
 The following services will be started:
 
 | Service                    | Mapped port |
 |----------------------------|:-----------:|
+| gzac-frontend              | 80          |
+| gzac-backend               | 8080        |
 | gzac-database              | 54320       |
 | gzac-database-mysql        | 33060       |
 | gzac-keycloak-database     | 54329       |
@@ -39,10 +44,12 @@ The following services will be started:
 | openzaak                   | 8001        |
 
 ### Keycloak and database only
-Execute the following command: `docker compose up -d`
+Execute the following command: `docker compose --profile gzac up -d`
 
 | Service                    | Mapped port |
 |----------------------------|:-----------:|
+| gzac-frontend              | 80          |
+| gzac-backend               | 8080        |
 | gzac-database              | 54320       |
 | gzac-database-mysql        | 33060       |
 | gzac-keycloak-database     | 54329       |
