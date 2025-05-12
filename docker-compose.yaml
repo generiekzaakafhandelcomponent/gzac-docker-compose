@@ -232,6 +232,7 @@ services:
       container_name: open-notificaties-rabbitmq
       profiles:
           - zgw
+          - opennotificaties
       ports:
           - "5673:5672"
           - "15673:15672"
@@ -242,6 +243,7 @@ services:
       platform: linux/amd64
       profiles:
           - zgw
+          - opennotificaties
       environment: &notificaties-env
           - DJANGO_SETTINGS_MODULE=nrc.conf.docker
           - SECRET_KEY=${SECRET_KEY:-4wHY2Cp5`4(q%)]cuWxPQJRp5kN?g+`.Xah>%6Fsq6+)R>p_}
@@ -273,6 +275,7 @@ services:
       platform: linux/amd64
       profiles:
           - zgw
+          - opennotificaties
       ports:
           - "8002:8000"
       environment: *notificaties-env
@@ -286,6 +289,7 @@ services:
       container_name: open-notificaties-database
       profiles:
           - zgw
+          - opennotificaties
       ports:
           - "54319:5432"
       environment:
@@ -442,7 +446,7 @@ services:
           - openklantv1
 
   gzac-backend:
-      image: ritense/gzac-backend:12.10.0
+      image: ritense/gzac-backend:12.12.0
       container_name: gzac-backend
       profiles:
           - gzac
@@ -467,7 +471,7 @@ services:
           - 8080:8080
 
   gzac-frontend:
-      image: ritense/gzac-frontend:12.10.0
+      image: ritense/gzac-frontend:12.12.0
       container_name: gzac-frontend
       profiles:
           - gzac
