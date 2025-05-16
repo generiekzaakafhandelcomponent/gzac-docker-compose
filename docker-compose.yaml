@@ -1,8 +1,10 @@
+name: valtimo-gzac-local
+
 services:
   # GZAC core
 
   gzac-keycloak:
-      container_name: gzac-keycloak
+      container_name: valtimo-gzac-local-gzac-keycloak
       depends_on:
           - gzac-keycloak-database
       image: quay.io/keycloak/keycloak:24.0.1
@@ -22,7 +24,7 @@ services:
       command: "start-dev --import-realm"
   gzac-keycloak-database:
       image: postgres:14.1
-      container_name: gzac-keycloak-database
+      container_name: valtimo-gzac-local-gzac-keycloak-database
       ports:
           - "54329:5432"
       environment:
@@ -30,7 +32,7 @@ services:
           POSTGRES_PASSWORD: keycloak
 
   gzac-database:
-      container_name: gzac-database
+      container_name: valtimo-gzac-local-gzac-database
       image: postgres:14.1
       ports:
           - "54320:5432"
@@ -42,7 +44,7 @@ services:
           - gzac-database-data:/var/lib/postgres # persist data even if container shuts down
 
   gzac-database-mysql:
-      container_name: gzac-database-mysql
+      container_name: valtimo-gzac-local-gzac-database-mysql
       image: mysql/mysql-server:8.0.28-1.2.7-server
       ports:
           - "33060:3306"
@@ -67,7 +69,7 @@ services:
 
   gzac-rabbitmq:
       image: rabbitmq:3-management
-      container_name: gzac-rabbitmq
+      container_name: valtimo-gzac-local-gzac-rabbitmq
       volumes:
           - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
           - ./imports/gzac-rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
@@ -79,7 +81,7 @@ services:
 
   openzaak:
       image: openzaak/open-zaak:1.13.0
-      container_name: openzaak
+      container_name: valtimo-gzac-local-openzaak
       platform: linux/amd64
       profiles:
           - zgw
@@ -108,7 +110,7 @@ services:
 
   openzaak-database:
       image: postgis/postgis:13-3.1
-      container_name: openzaak-database
+      container_name: valtimo-gzac-local-openzaak-database
       platform: linux/amd64
       profiles:
           - zgw
@@ -124,14 +126,14 @@ services:
 
   openzaak-redis:
       image: redis:6.2.6
-      container_name: openzaak-redis
+      container_name: valtimo-gzac-local-openzaak-redis
       profiles:
           - zgw
           - openzaak
 
   objecten-api:
       image: maykinmedia/objects-api:2.1.1
-      container_name: objecten-api
+      container_name: valtimo-gzac-local-objecten-api
       platform: linux/amd64
       profiles:
           - zgw
@@ -151,7 +153,7 @@ services:
 
   objecten-api-database:
       image: postgis/postgis:13-3.1
-      container_name: objecten-api-database
+      container_name: valtimo-gzac-local-objecten-api-database
       platform: linux/amd64
       profiles:
           - zgw
@@ -165,7 +167,7 @@ services:
 
   objecten-api-import:
       image: maykinmedia/objects-api:2.1.1
-      container_name: objects-api-import
+      container_name: valtimo-gzac-local-objects-api-import
       platform: linux/amd64
       profiles:
           - zgw
@@ -181,7 +183,7 @@ services:
 
   objecttypen-api:
       image: maykinmedia/objecttypes-api:2.1.0
-      container_name: objecttypen-api
+      container_name: valtimo-gzac-local-objecttypen-api
       platform: linux/amd64
       profiles:
           - zgw
@@ -201,7 +203,7 @@ services:
 
   objecttypen-api-database:
       image: postgres:14.1
-      container_name: objecttypen-api-database
+      container_name: valtimo-gzac-local-objecttypen-api-database
       profiles:
           - zgw
           - objecten
@@ -214,7 +216,7 @@ services:
 
   objecttypen-api-import:
       image: maykinmedia/objecttypes-api:2.1.0
-      container_name: objecttypen-api-import
+      container_name: valtimo-gzac-local-objecttypen-api-import
       platform: linux/amd64
       profiles:
           - zgw
@@ -229,7 +231,7 @@ services:
 
   open-notificaties-rabbitmq:
       image: rabbitmq:3.9-management
-      container_name: open-notificaties-rabbitmq
+      container_name: valtimo-gzac-local-open-notificaties-rabbitmq
       profiles:
           - zgw
           - opennotificaties
@@ -239,7 +241,7 @@ services:
 
   open-notificaties-celery:
       image: openzaak/open-notificaties:1.4.3
-      container_name: open-notificaties
+      container_name: valtimo-gzac-local-open-notificaties
       platform: linux/amd64
       profiles:
           - zgw
@@ -271,7 +273,7 @@ services:
 
   open-notificaties:
       image: openzaak/open-notificaties:1.4.3
-      container_name: open-notificaties-celery
+      container_name: valtimo-gzac-local-open-notificaties-celery
       platform: linux/amd64
       profiles:
           - zgw
@@ -286,7 +288,7 @@ services:
 
   open-notificaties-database:
       image: postgres:13.5  # open-notificaties doesn't work with postgres 14.
-      container_name: open-notificaties-database
+      container_name: valtimo-gzac-local-open-notificaties-database
       profiles:
           - zgw
           - opennotificaties
@@ -301,13 +303,13 @@ services:
 
   open-notificaties-redis:
       image: redis:6.2.6
-      container_name: open-notificaties-redis
+      container_name: valtimo-gzac-local-open-notificaties-redis
       profiles:
           - zgw
 
   open-forms-database:
       image: postgres:14.1
-      container_name: open-forms-database
+      container_name: valtimo-gzac-local-open-forms-database
       profiles:
           - openformulieren
       ports:
@@ -320,13 +322,13 @@ services:
 
   open-forms-redis:
       image: redis:6.2.6
-      container_name: open-forms-redis
+      container_name: valtimo-gzac-local-open-forms-redis
       profiles:
           - openformulieren
 
   open-forms-web:
       image: openformulieren/open-forms:2.0.3
-      container_name: open-forms-web
+      container_name: valtimo-gzac-local-open-forms-web
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -359,7 +361,7 @@ services:
 
   open-forms-celery:
       image: openformulieren/open-forms:2.0.3
-      container_name: open-forms-celery
+      container_name: valtimo-gzac-local-open-forms-celery
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -373,7 +375,7 @@ services:
 
   open-forms-celery-beat:
       image: openformulieren/open-forms:2.0.3
-      container_name: open-forms-celery-beat
+      container_name: valtimo-gzac-local-open-forms-celery-beat
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -385,7 +387,7 @@ services:
 
   open-forms-celery-flower:
       image: mher/flower:0.9.7
-      container_name: open-forms-celery-flower
+      container_name: valtimo-gzac-local-open-forms-celery-flower
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -398,7 +400,7 @@ services:
 
   open-forms-busybox:
       image: busybox:1.34.1
-      container_name: open-forms-busybox
+      container_name: valtimo-gzac-local-open-forms-busybox
       profiles:
           - openformulieren
       command: /bin/chown -R 1000 /private_media
@@ -407,7 +409,7 @@ services:
 
   open-klant:
       image: maykinmedia/open-klant:latest
-      container_name: open-klant
+      container_name: valtimo-gzac-local-open-klant
       platform: linux/amd64
       profiles:
           - openklantv1
@@ -428,7 +430,7 @@ services:
 
   open-klant-database:
       image: postgres:14.1
-      container_name: open-klant-database
+      container_name: valtimo-gzac-local-open-klant-database
       profiles:
           - openklantv1
       ports:
@@ -441,13 +443,13 @@ services:
 
   open-klant-redis:
       image: redis:6.2.6
-      container_name: open-klant-redis
+      container_name: valtimo-gzac-local-open-klant-redis
       profiles:
           - openklantv1
 
   gzac-backend:
       image: ritense/gzac-backend:12.12.0
-      container_name: gzac-backend
+      container_name: valtimo-gzac-local-gzac-backend
       profiles:
           - gzac
       environment:
@@ -472,7 +474,7 @@ services:
 
   gzac-frontend:
       image: ritense/gzac-frontend:12.12.0
-      container_name: gzac-frontend
+      container_name: valtimo-gzac-local-gzac-frontend
       profiles:
           - gzac
       environment:
@@ -486,7 +488,7 @@ services:
           - 80:8080
   gzac-demo-backend:
       image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
-      container_name: gzac-backend
+      container_name: valtimo-gzac-local-gzac-backend
       profiles:
           - demo
       environment:
@@ -511,7 +513,7 @@ services:
 
   gzac-demo-frontend:
       image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
-      container_name: gzac-frontend
+      container_name: valtimo-gzac-local-gzac-frontend
       profiles:
           - demo
       environment:
