@@ -22,6 +22,7 @@ services:
       volumes:
           - ./imports/keycloak:/opt/keycloak/data/import
       command: "start-dev --import-realm"
+
   gzac-keycloak-database:
       image: postgres:14.1
       container_name: gzac-docker-compose-gzac-keycloak-database
@@ -102,6 +103,7 @@ services:
           - DJANGO_SUPERUSER_PASSWORD=admin
           - SENDFILE_BACKEND=django_sendfile.backends.simple
           - NOTIFICATIONS_DISABLED=true
+          - DISABLE_2FA=true
       ports:
           - "8001:8000"
       depends_on:
@@ -146,8 +148,7 @@ services:
           - DJANGO_SETTINGS_MODULE=objects.conf.docker
           - DB_HOST=objecten-api-database
           - DEBUG=true
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
-          - TWO_FACTOR_PATCH_ADMIN=False
+          - DISABLE_2FA=true
       depends_on:
           - objecten-api-database
 
@@ -196,8 +197,7 @@ services:
           - DJANGO_SETTINGS_MODULE=objecttypes.conf.docker
           - DB_HOST=objecttypen-api-database
           - DEBUG=true
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
-          - TWO_FACTOR_PATCH_ADMIN=False
+          - DISABLE_2FA=true
       depends_on:
           - objecttypen-api-database
 
@@ -265,6 +265,7 @@ services:
           - CELERY_LOGLEVEL=DEBUG
           - CELERY_WORKER_CONCURRENCY=${CELERY_WORKER_CONCURRENCY:-4}
           - SUBPATH=${SUBPATH:-/}
+          - DISABLE_2FA=true
       command: /celery_worker.sh
       depends_on:
           - open-notificaties-database
@@ -347,11 +348,10 @@ services:
           - CELERY_RESULT_BACKEND=redis://open-forms-redis:6379/0
           - CELERY_LOGLEVEL=DEBUG
           - OPENFORMS_LOCATION_CLIENT=${OPENFORMS_LOCATION_CLIENT:-openforms.contrib.bag.client.BAGClient}
+          - DISABLE_2FA=true
           # Needed for Celery Flower to match the TIME_ZONE configured in the
           # settings used by workers and beat containers.
           - TZ=Europe/Amsterdam
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False
-          - TWO_FACTOR_PATCH_ADMIN=False
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       ports:
@@ -423,6 +423,7 @@ services:
           - CACHE_DEFAULT=open-klant-redis:6379/0
           - CACHE_AXES=open-klant-redis:6379/0
           - ALLOWED_HOSTS=*
+          - DISABLE_2FA=true
       ports:
           - "8006:8000"
       depends_on:
