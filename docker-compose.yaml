@@ -1,8 +1,10 @@
+name: gzac-docker-compose
+
 services:
   # GZAC core
 
   gzac-keycloak:
-      container_name: gzac-keycloak
+      container_name: gzac-docker-compose-gzac-keycloak
       depends_on:
           - gzac-keycloak-database
       image: quay.io/keycloak/keycloak:26.2.2
@@ -22,7 +24,7 @@ services:
       command: "start-dev --import-realm"
   gzac-keycloak-database:
       image: postgres:17.4
-      container_name: gzac-keycloak-database
+      container_name: gzac-docker-compose-gzac-keycloak-database
       ports:
           - "54329:5432"
       environment:
@@ -30,7 +32,7 @@ services:
           POSTGRES_PASSWORD: keycloak
 
   gzac-database:
-      container_name: gzac-database
+      container_name: gzac-docker-compose-gzac-database
       image: postgres:17.4
       ports:
           - "54320:5432"
@@ -42,7 +44,7 @@ services:
           - gzac-database-data:/var/lib/postgres # persist data even if container shuts down
 
   gzac-database-mysql:
-      container_name: gzac-database-mysql
+      container_name: gzac-docker-compose-gzac-database-mysql
       image: mysql/mysql-server:8.0.28-1.2.7-server
       ports:
           - "33060:3306"
@@ -67,7 +69,7 @@ services:
 
   gzac-rabbitmq:
       image: rabbitmq:4.1.0-management
-      container_name: gzac-rabbitmq
+      container_name: gzac-docker-compose-gzac-rabbitmq
       volumes:
           - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
           - ./imports/gzac-rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
@@ -84,7 +86,7 @@ services:
 
   openzaak:
       image: openzaak/open-zaak:1.20.0
-      container_name: openzaak
+      container_name: gzac-docker-compose-openzaak
       platform: linux/amd64
       profiles:
           - zgw
@@ -114,7 +116,7 @@ services:
 
   openzaak-database:
       image: postgis/postgis:17-3.4
-      container_name: openzaak-database
+      container_name: gzac-docker-compose-openzaak-database
       platform: linux/amd64
       profiles:
           - zgw
@@ -130,14 +132,14 @@ services:
 
   openzaak-redis:
       image: redis:7.4.3
-      container_name: openzaak-redis
+      container_name: gzac-docker-compose-openzaak-redis
       profiles:
           - zgw
           - openzaak
 
   objecten-api:
       image: maykinmedia/objects-api:2.1.1 # TODO: later versions don't send notification when an object is created. This breaks the verzoek-plugin. Look into whats wrong
-      container_name: objecten-api
+      container_name: gzac-docker-compose-objecten-api
       platform: linux/amd64
       profiles:
           - zgw
@@ -158,7 +160,7 @@ services:
 
   objecten-api-database:
       image: postgis/postgis:17-3.4
-      container_name: objecten-api-database
+      container_name: gzac-docker-compose-objecten-api-database
       platform: linux/amd64
       profiles:
           - zgw
@@ -172,7 +174,7 @@ services:
 
   objecten-api-import:
       image: maykinmedia/objects-api:2.1.1
-      container_name: objects-api-import
+      container_name: gzac-docker-compose-objects-api-import
       platform: linux/amd64
       profiles:
           - zgw
@@ -188,14 +190,14 @@ services:
 
   objecten-api-redis:
       image: redis:7.4.3
-      container_name: objecten-api-redis
+      container_name: gzac-docker-compose-objecten-api-redis
       profiles:
           - zgw
           - objecten
 
   objecttypen-api:
       image: maykinmedia/objecttypes-api:3.0.2
-      container_name: objecttypen-api
+      container_name: gzac-docker-compose-objecttypen-api
       platform: linux/amd64
       profiles:
           - zgw
@@ -233,7 +235,7 @@ services:
 
   objecttypen-api-database:
       image: postgres:17.4
-      container_name: objecttypen-api-database
+      container_name: gzac-docker-compose-objecttypen-api-database
       profiles:
           - zgw
           - objecten
@@ -246,7 +248,7 @@ services:
 
   objecttypen-api-import:
       image: maykinmedia/objecttypes-api:3.0.2
-      container_name: objecttypen-api-import
+      container_name: gzac-docker-compose-objecttypen-api-import
       platform: linux/amd64
       profiles:
           - zgw
@@ -262,7 +264,7 @@ services:
 
   open-notificaties-rabbitmq:
       image: rabbitmq:4.1.0-management
-      container_name: open-notificaties-rabbitmq
+      container_name: gzac-docker-compose-open-notificaties-rabbitmq
       profiles:
           - zgw
       ports:
@@ -271,7 +273,7 @@ services:
 
   open-notificaties-celery:
       image: openzaak/open-notificaties:1.8.2
-      container_name: open-notificaties
+      container_name: gzac-docker-compose-open-notificaties
       platform: linux/amd64
       profiles:
           - zgw
@@ -303,7 +305,7 @@ services:
 
   open-notificaties:
       image: openzaak/open-notificaties:1.8.1
-      container_name: open-notificaties-celery
+      container_name: gzac-docker-compose-open-notificaties-celery
       platform: linux/amd64
       profiles:
           - zgw
@@ -317,7 +319,7 @@ services:
 
   open-notificaties-database:
       image: postgres:17.4  # open-notificaties doesn't work with postgres 14.
-      container_name: open-notificaties-database
+      container_name: gzac-docker-compose-open-notificaties-database
       profiles:
           - zgw
       ports:
@@ -331,13 +333,13 @@ services:
 
   open-notificaties-redis:
       image: redis:7.4.3
-      container_name: open-notificaties-redis
+      container_name: gzac-docker-compose-open-notificaties-redis
       profiles:
           - zgw
 
   open-forms-database:
       image: postgres:17.4
-      container_name: open-forms-database
+      container_name: gzac-docker-compose-open-forms-database
       profiles:
           - openformulieren
       ports:
@@ -350,13 +352,13 @@ services:
 
   open-forms-redis:
       image: redis:7.4.3
-      container_name: open-forms-redis
+      container_name: gzac-docker-compose-open-forms-redis
       profiles:
           - openformulieren
 
   open-forms-web:
       image: openformulieren/open-forms:3.1.1
-      container_name: open-forms-web
+      container_name: gzac-docker-compose-open-forms-web
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -389,7 +391,7 @@ services:
 
   open-forms-celery:
       image: openformulieren/open-forms:3.1.1
-      container_name: open-forms-celery
+      container_name: gzac-docker-compose-open-forms-celery
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -403,7 +405,7 @@ services:
 
   open-forms-celery-beat:
       image: openformulieren/open-forms:3.1.1
-      container_name: open-forms-celery-beat
+      container_name: gzac-docker-compose-open-forms-celery-beat
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -415,7 +417,7 @@ services:
 
   open-forms-celery-flower:
       image: mher/flower:2.0.1
-      container_name: open-forms-celery-flower
+      container_name: gzac-docker-compose-open-forms-celery-flower
       platform: linux/amd64
       profiles:
           - openformulieren
@@ -428,7 +430,7 @@ services:
 
   open-forms-busybox:
       image: busybox:1.37.0
-      container_name: open-forms-busybox
+      container_name: gzac-docker-compose-open-forms-busybox
       profiles:
           - openformulieren
       command: /bin/chown -R 1000 /private_media
@@ -437,7 +439,7 @@ services:
 
   gzac-backend:
       image: ritense/gzac-backend:13.0.0
-      container_name: gzac-backend
+      container_name: gzac-docker-compose-gzac-backend
       profiles:
           - gzac
       environment:
@@ -463,7 +465,7 @@ services:
 
   gzac-frontend:
       image: ritense/gzac-frontend:13.0.0
-      container_name: gzac-frontend
+      container_name: gzac-docker-compose-gzac-frontend
       profiles:
           - gzac
       environment:
@@ -477,7 +479,7 @@ services:
           - 80:8080
   gzac-demo-backend:
       image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
-      container_name: gzac-backend
+      container_name: gzac-docker-compose-gzac-backend
       profiles:
           - demo
       environment:
@@ -502,7 +504,7 @@ services:
 
   gzac-demo-frontend:
       image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
-      container_name: gzac-frontend
+      container_name: gzac-docker-compose-gzac-frontend
       profiles:
           - demo
       environment:
