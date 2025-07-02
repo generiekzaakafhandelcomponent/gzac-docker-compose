@@ -479,7 +479,7 @@ services:
           - 80:8080
   gzac-demo-backend:
       image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
-      container_name: gzac-backend
+      container_name: gzac-docker-compose-gzac-backend
       profiles:
           - demo
       environment:
