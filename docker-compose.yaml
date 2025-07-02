@@ -492,7 +492,7 @@ services:
       profiles:
           - demo
       environment:
-          - SPRING_PROFILES_ACTIVE=docker
+          - SPRING_PROFILES_ACTIVE=dev
           - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:54320/gzac
           - SPRING_DATASOURCE_NAME=gzac
           - SPRING_DATASOURCE_USERNAME=gzac
