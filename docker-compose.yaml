@@ -22,6 +22,7 @@ services:
       volumes:
           - ./imports/keycloak:/opt/keycloak/data/import
       command: "start-dev --import-realm"
+
   gzac-keycloak-database:
       image: postgres:17.4
       container_name: gzac-docker-compose-gzac-keycloak-database
@@ -76,6 +77,8 @@ services:
       ports:
           - "5672:5672"
           - "15672:15672"
+      environment:
+          RABBITMQ_CONFIG_FILE: /etc/rabbitmq/rabbitmq.conf
       command: >
           bash -c "
             rabbitmq-plugins enable --offline rabbitmq_stream rabbitmq_stream_management &&
@@ -156,7 +159,6 @@ services:
           - TWO_FACTOR_PATCH_ADMIN=False
       depends_on:
           - objecten-api-database
-
 
   objecten-api-database:
       image: postgis/postgis:17-3.4
@@ -477,6 +479,7 @@ services:
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
+
   gzac-demo-backend:
       image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
       container_name: gzac-docker-compose-gzac-backend
@@ -516,6 +519,7 @@ services:
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
+
 volumes:
   gzac-database-data:
   gzac-database-data-mysql:
