@@ -442,7 +442,6 @@ services:
       container_name: gzac-docker-compose-open-klant
       platform: linux/amd64
       profiles:
-          - zgw
           - openklant
       environment:
           - DJANGO_SETTINGS_MODULE=openklant.conf.docker
@@ -464,7 +463,6 @@ services:
       image: postgres:17.4
       container_name: gzac-docker-compose-open-klant-database
       profiles:
-          - zgw
           - openklant
       ports:
           - "54323:5432"
@@ -478,7 +476,6 @@ services:
       image: redis:7.4.3
       container_name: gzac-docker-compose-open-klant-redis
       profiles:
-          - zgw
           - openklant
 
 volumes:
