@@ -438,11 +438,11 @@ services:
           - ./imports/open-formulieren/private_media:/private_media
 
   open-klant:
-      image: maykinmedia/open-klant:2.7.0
+      image: maykinmedia/open-klant:2.10.0
       container_name: gzac-docker-compose-open-klant
       platform: linux/amd64
       profiles:
-          - openklantv1
+          - openklant
       environment:
           - DJANGO_SETTINGS_MODULE=openklant.conf.docker
           - SECRET_KEY=${SECRET_KEY:-django-insecure-$$8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
@@ -453,6 +453,7 @@ services:
           - CACHE_DEFAULT=open-klant-redis:6379/0
           - CACHE_AXES=open-klant-redis:6379/0
           - ALLOWED_HOSTS=*
+          - DISABLE_2FA=True
       ports:
           - "8006:8000"
       depends_on:
@@ -462,7 +463,7 @@ services:
       image: postgres:17.4
       container_name: gzac-docker-compose-open-klant-database
       profiles:
-          - openklantv1
+          - openklant
       ports:
           - "54323:5432"
       environment:
@@ -475,7 +476,7 @@ services:
       image: redis:7.4.3
       container_name: gzac-docker-compose-open-klant-redis
       profiles:
-          - openklantv1
+          - openklant
 
 volumes:
   gzac-database-data:
