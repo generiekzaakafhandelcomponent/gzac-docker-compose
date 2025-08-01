@@ -22,6 +22,12 @@ services:
       volumes:
           - ./imports/keycloak:/opt/keycloak/data/import
       command: "start-dev --import-realm"
+      healthcheck:
+          test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth']
+          interval: 10s
+          timeout: 5s
+          retries: 5
+          start_period: 5s
 
   gzac-keycloak-database:
       image: postgres:17.4
@@ -320,7 +326,7 @@ services:
           - open-notificaties-redis
 
   open-notificaties-database:
-      image: postgres:17.4  # open-notificaties doesn't work with postgres 14.
+      image: postgres:17.4
       container_name: gzac-docker-compose-open-notificaties-database
       profiles:
           - zgw
@@ -440,7 +446,7 @@ services:
           - ./imports/open-formulieren/private_media:/private_media
 
   gzac-backend:
-      image: ritense/gzac-backend:13.0.0
+      image: ritense/gzac-backend:13.0.2
       container_name: gzac-docker-compose-gzac-backend
       profiles:
           - gzac
@@ -451,22 +457,27 @@ services:
           - SPRING_DATASOURCE_USERNAME=gzac
           - SPRING_DATASOURCE_PASSWORD=password
           - VALTIMO_APP_HOSTNAME=http://localhost:4200
-          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
-          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUER-URI=http://host.docker.internal:8081/auth/realms/valtimo
-          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUER-URI=http://host.docker.internal:8081/auth/realms/valtimo
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENT-ID=valtimo-console
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENT-ID=valtimo-user-m2m-client
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENT-SECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
           - VALTIMO_PLUGIN_ENCRYPTION-SECRET=abcdefghijklmnop
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
           - VALTIMO_WEB_CORS_PATHS=/**
+          - VALTIMO_DOCKER_FILTER_ENABLED=true
+          - VALTIMO_DOCKER_FILTER_PORTS=8080,8001,8002,8003,8006,8010,8011
       ports:
           - 8080:8080
+      depends_on:
+          gzac-keycloak:
+              condition: service_healthy
 
   gzac-frontend:
-      image: ritense/gzac-frontend:13.0.0
+      image: ritense/gzac-frontend:13.0.1
       container_name: gzac-docker-compose-gzac-frontend
       profiles:
           - gzac
@@ -479,6 +490,8 @@ services:
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
+      depends_on:
+          - gzac-backend
 
   gzac-demo-backend:
       image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
@@ -492,18 +505,21 @@ services:
           - SPRING_DATASOURCE_USERNAME=gzac
           - SPRING_DATASOURCE_PASSWORD=password
           - VALTIMO_APP_HOSTNAME=http://localhost:4200
-          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
-          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUER-URI=http://host.docker.internal:8081/auth/realms/valtimo
-          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUER-URI=http://host.docker.internal:8081/auth/realms/valtimo
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENT-ID=valtimo-console
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENT-ID=valtimo-user-m2m-client
-          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENT-SECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
           - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
           - VALTIMO_WEB_CORS_PATHS=/**
       ports:
           - 8080:8080
+      depends_on:
+          gzac-keycloak:
+              condition: service_healthy
 
   gzac-demo-frontend:
       image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
@@ -519,6 +535,8 @@ services:
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
+      depends_on:
+          - gzac-backend
 
 volumes:
   gzac-database-data:
