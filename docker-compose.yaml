@@ -26,7 +26,7 @@ services:
           test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth']
           interval: 10s
           timeout: 5s
-          retries: 5
+          retries: 60
           start_period: 5s
 
   gzac-keycloak-database:
@@ -525,7 +525,7 @@ services:
           - KEYCLOAK_URL=http://localhost:8081/auth
           - KEYCLOAK_REALM=valtimo
           - KEYCLOAK_CLIENT_ID=valtimo-console
-          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak
+          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak/callback
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
@@ -570,7 +570,7 @@ services:
           - KEYCLOAK_URL=http://localhost:8081/auth
           - KEYCLOAK_REALM=valtimo
           - KEYCLOAK_CLIENT_ID=valtimo-console
-          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak
+          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak/callback
           - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
       ports:
           - 80:8080
