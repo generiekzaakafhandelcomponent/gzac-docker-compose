@@ -163,6 +163,7 @@ services:
           - DEBUG=true
           - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
           - TWO_FACTOR_PATCH_ADMIN=False
+          - DEBUG=True
       depends_on:
           - objecten-api-database
 
@@ -361,11 +362,12 @@ services:
   open-forms-redis:
       image: redis:7.4.3
       container_name: gzac-docker-compose-open-forms-redis
+      command: ["redis-server", "--appendonly", "yes"]
       profiles:
           - openformulieren
 
   open-forms-web:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-web
       platform: linux/amd64
       profiles:
@@ -380,6 +382,7 @@ services:
           - DB_HOST=open-forms-database
           - CACHE_DEFAULT=open-forms-redis:6379/0
           - CACHE_AXES=open-forms-redis:6379/0
+          - CACHE_PORTALOCKER=open-forms-redis:6379/0
           - ALLOWED_HOSTS=*
           - CELERY_BROKER_URL=redis://open-forms-redis:6379/0
           - CELERY_RESULT_BACKEND=redis://open-forms-redis:6379/0
@@ -388,8 +391,8 @@ services:
           # Needed for Celery Flower to match the TIME_ZONE configured in the
           # settings used by workers and beat containers.
           - TZ=Europe/Amsterdam
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False
-          - TWO_FACTOR_PATCH_ADMIN=False
+          # otpauth://totp/admin?secret=7IG6WR32BFB3AAT6ZZ54RAC53QN27B2N&algorithm=SHA1&digits=6&period=30
+          - DEBUG=True
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       ports:
@@ -398,7 +401,7 @@ services:
           - open-forms-database
 
   open-forms-celery:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery
       platform: linux/amd64
       profiles:
@@ -412,7 +415,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-beat:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery-beat
       platform: linux/amd64
       profiles:
@@ -424,7 +427,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-flower:
-      image: mher/flower:2.0.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery-flower
       platform: linux/amd64
       profiles:
