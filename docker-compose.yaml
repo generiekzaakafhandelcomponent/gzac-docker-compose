@@ -21,7 +21,11 @@ services:
           KC_HTTP_RELATIVE_PATH: /auth
       volumes:
           - ./imports/keycloak:/opt/keycloak/data/import
-      command: "start-dev --import-realm"
+      command:
+          - start-dev
+          - --import-realm
+          - --http-enabled=true
+          - --hostname-strict=false
       healthcheck:
           test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth']
           interval: 10s
@@ -393,12 +397,15 @@ services:
           - TZ=Europe/Amsterdam
           # otpauth://totp/admin?secret=7IG6WR32BFB3AAT6ZZ54RAC53QN27B2N&algorithm=SHA1&digits=6&period=30
           - DEBUG=True
+      extra_hosts:
+          - "gzac-keycloak.localhost:host-gateway"
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       ports:
           - "8003:8000"
       depends_on:
           - open-forms-database
+          - open-forms-redis
 
   open-forms-celery:
       image: openformulieren/open-forms:3.1.6
@@ -408,6 +415,12 @@ services:
           - openformulieren
       environment: *web_env
       command: /celery_worker.sh
+      healthcheck:
+          test: [ "CMD", "python", "/app/bin/check_celery_worker_liveness.py" ]
+          interval: 30s
+          timeout: 5s
+          retries: 3
+          start_period: 10s
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       depends_on:
@@ -435,6 +448,7 @@ services:
       environment: *web_env
       ports:
           - "5555:5555"
+      command: /celery_flower.sh
       depends_on:
           - open-forms-redis
           - open-forms-celery

@@ -972,7 +972,41 @@
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
     "defaultClientScopes" : [ "web-origins", "roles", "profile", "email" ],
-    "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
+    "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ],
+    "protocolMappers": [
+      {
+        "id": "2e041584-8dd7-4c31-9b98-257dd476700a",
+        "name": "openformulieren-groups",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-realm-role-mapper",
+        "consentRequired": false,
+        "config": {
+          "multivalued": "true",
+          "introspection.token.claim": "true",
+          "userinfo.token.claim": "true",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "groups",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "2abf6501-4fdd-4e35-ac6d-2ec42c319929",
+        "name": "openformulieren-employee_id",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": false,
+        "config": {
+          "userinfo.token.claim": "true",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "introspection.token.claim": "true",
+          "claim.name": "employee_id",
+          "jsonType.label": "String",
+          "user.attribute": "username"
+        }
+      }
+    ]
   }, {
     "id" : "ceda1e6a-bbfe-4410-ba44-1632b027229c",
     "clientId" : "valtimo-user-m2m-client",
