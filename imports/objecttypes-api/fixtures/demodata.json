@@ -3,6 +3,7 @@
         "model": "token.tokenauth",
         "pk": 100,
         "fields": {
+            "identifier": "ritense",
             "contact_person": "Ritense",
             "email": "Ritense@Ritense.test",
             "organization": "",
