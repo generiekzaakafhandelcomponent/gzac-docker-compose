@@ -21,7 +21,18 @@ services:
           KC_HTTP_RELATIVE_PATH: /auth
       volumes:
           - ./imports/keycloak:/opt/keycloak/data/import
-      command: "start-dev --import-realm"
+      command:
+          - start-dev
+          - --import-realm
+          - --http-enabled=true
+          - --hostname-strict=false
+      healthcheck:
+          test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth']
+          interval: 10s
+          timeout: 5s
+          retries: 60
+          start_period: 5s
+
   gzac-keycloak-database:
       image: postgres:17.4
       container_name: gzac-docker-compose-gzac-keycloak-database
@@ -76,6 +87,8 @@ services:
       ports:
           - "5672:5672"
           - "15672:15672"
+      environment:
+          RABBITMQ_CONFIG_FILE: /etc/rabbitmq/rabbitmq.conf
       command: >
           bash -c "
             rabbitmq-plugins enable --offline rabbitmq_stream rabbitmq_stream_management &&
@@ -154,6 +167,7 @@ services:
           - DEBUG=true
           - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
           - TWO_FACTOR_PATCH_ADMIN=False
+          - DEBUG=True
       depends_on:
           - objecten-api-database
 
@@ -318,7 +332,7 @@ services:
           - open-notificaties-redis
 
   open-notificaties-database:
-      image: postgres:17.4  # open-notificaties doesn't work with postgres 14.
+      image: postgres:17.4
       container_name: gzac-docker-compose-open-notificaties-database
       profiles:
           - zgw
@@ -353,11 +367,12 @@ services:
   open-forms-redis:
       image: redis:7.4.3
       container_name: gzac-docker-compose-open-forms-redis
+      command: ["redis-server", "--appendonly", "yes"]
       profiles:
           - openformulieren
 
   open-forms-web:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-web
       platform: linux/amd64
       profiles:
@@ -372,6 +387,7 @@ services:
           - DB_HOST=open-forms-database
           - CACHE_DEFAULT=open-forms-redis:6379/0
           - CACHE_AXES=open-forms-redis:6379/0
+          - CACHE_PORTALOCKER=open-forms-redis:6379/0
           - ALLOWED_HOSTS=*
           - CELERY_BROKER_URL=redis://open-forms-redis:6379/0
           - CELERY_RESULT_BACKEND=redis://open-forms-redis:6379/0
@@ -380,23 +396,32 @@ services:
           # Needed for Celery Flower to match the TIME_ZONE configured in the
           # settings used by workers and beat containers.
           - TZ=Europe/Amsterdam
-          - TWO_FACTOR_FORCE_OTP_ADMIN=False
-          - TWO_FACTOR_PATCH_ADMIN=False
+          # otpauth://totp/admin?secret=7IG6WR32BFB3AAT6ZZ54RAC53QN27B2N&algorithm=SHA1&digits=6&period=30
+          - DEBUG=True
+      extra_hosts:
+          - "gzac-keycloak.localhost:host-gateway"
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       ports:
           - "8003:8000"
       depends_on:
           - open-forms-database
+          - open-forms-redis
 
   open-forms-celery:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery
       platform: linux/amd64
       profiles:
           - openformulieren
       environment: *web_env
       command: /celery_worker.sh
+      healthcheck:
+          test: [ "CMD", "python", "/app/bin/check_celery_worker_liveness.py" ]
+          interval: 30s
+          timeout: 5s
+          retries: 3
+          start_period: 10s
       volumes:
           - ./imports/open-formulieren/private_media:/app/private_media
       depends_on:
@@ -404,7 +429,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-beat:
-      image: openformulieren/open-forms:3.1.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery-beat
       platform: linux/amd64
       profiles:
@@ -416,7 +441,7 @@ services:
           - open-forms-redis
 
   open-forms-celery-flower:
-      image: mher/flower:2.0.1
+      image: openformulieren/open-forms:3.1.6
       container_name: gzac-docker-compose-open-forms-celery-flower
       platform: linux/amd64
       profiles:
@@ -424,6 +449,7 @@ services:
       environment: *web_env
       ports:
           - "5555:5555"
+      command: /celery_flower.sh
       depends_on:
           - open-forms-redis
           - open-forms-celery
@@ -437,46 +463,140 @@ services:
       volumes:
           - ./imports/open-formulieren/private_media:/private_media
 
+
   open-klant:
-      image: maykinmedia/open-klant:2.10.0
-      container_name: gzac-docker-compose-open-klant
-      platform: linux/amd64
-      profiles:
-          - openklant
-      environment:
-          - DJANGO_SETTINGS_MODULE=openklant.conf.docker
-          - SECRET_KEY=${SECRET_KEY:-django-insecure-$$8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
-          - DB_NAME=openklant
-          - DB_USER=openklant
-          - DB_PASSWORD=openklant
-          - DB_HOST=open-klant-database
-          - CACHE_DEFAULT=open-klant-redis:6379/0
-          - CACHE_AXES=open-klant-redis:6379/0
-          - ALLOWED_HOSTS=*
-          - DISABLE_2FA=True
-      ports:
-          - "8006:8000"
-      depends_on:
-          - open-klant-database
+    image: maykinmedia/open-klant:2.10.0
+    container_name: gzac-docker-compose-open-klant
+    platform: linux/amd64
+    profiles:
+      - openklant
+    environment:
+      - DJANGO_SETTINGS_MODULE=openklant.conf.docker
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-$$8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
+      - DB_NAME=openklant
+      - DB_USER=openklant
+      - DB_PASSWORD=openklant
+      - DB_HOST=open-klant-database
+      - CACHE_DEFAULT=open-klant-redis:6379/0
+      - CACHE_AXES=open-klant-redis:6379/0
+      - ALLOWED_HOSTS=*
+      - DISABLE_2FA=True
+    ports:
+      - "8006:8000"
+    depends_on:
+      - open-klant-database
 
   open-klant-database:
-      image: postgres:17.4
-      container_name: gzac-docker-compose-open-klant-database
-      profiles:
-          - openklant
-      ports:
-          - "54323:5432"
-      environment:
-          - POSTGRES_USER=${DB_USER:-openklant}
-          - POSTGRES_PASSWORD=${DB_PASSWORD:-openklant}
-      volumes:
-          - ./imports/open-klanten:/docker-entrypoint-initdb.d
+    image: postgres:17.4
+    container_name: gzac-docker-compose-open-klant-database
+    profiles:
+      - openklant
+    ports:
+      - "54323:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER:-openklant}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-openklant}
+    volumes:
+      - ./imports/open-klanten:/docker-entrypoint-initdb.d
 
   open-klant-redis:
-      image: redis:7.4.3
-      container_name: gzac-docker-compose-open-klant-redis
+    image: redis:7.4.3
+    container_name: gzac-docker-compose-open-klant-redis
+    profiles:
+      - openklant
+
+  gzac-backend:
+      image: ritense/gzac-backend:13.0.2
+      container_name: gzac-docker-compose-gzac-backend
       profiles:
-          - openklant
+          - gzac
+      environment:
+          - SPRING_PROFILES_ACTIVE=dev
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:54320/gzac
+          - SPRING_DATASOURCE_NAME=gzac
+          - SPRING_DATASOURCE_USERNAME=gzac
+          - SPRING_DATASOURCE_PASSWORD=password
+          - VALTIMO_APP_HOSTNAME=http://localhost:4200
+          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+          - VALTIMO_PLUGIN_ENCRYPTION-SECRET=abcdefghijklmnop
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
+          - VALTIMO_WEB_CORS_PATHS=/**
+          - VALTIMO_DOCKER_FILTER_ENABLED=true
+          - VALTIMO_DOCKER_FILTER_PORTS=8080,8001,8002,8003,8006,8010,8011
+      ports:
+          - 8080:8080
+      depends_on:
+          gzac-keycloak:
+              condition: service_healthy
+
+  gzac-frontend:
+      image: ritense/gzac-frontend:13.0.1
+      container_name: gzac-docker-compose-gzac-frontend
+      profiles:
+          - gzac
+      environment:
+          - API_URI=http://localhost:8080/api
+          - KEYCLOAK_URL=http://localhost:8081/auth
+          - KEYCLOAK_REALM=valtimo
+          - KEYCLOAK_CLIENT_ID=valtimo-console
+          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak/callback
+          - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
+      ports:
+          - 80:8080
+      depends_on:
+          - gzac-backend
+
+  gzac-demo-backend:
+      image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
+      container_name: gzac-docker-compose-gzac-backend
+      profiles:
+          - demo
+      environment:
+          - SPRING_PROFILES_ACTIVE=dev
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:54320/gzac
+          - SPRING_DATASOURCE_NAME=gzac
+          - SPRING_DATASOURCE_USERNAME=gzac
+          - SPRING_DATASOURCE_PASSWORD=password
+          - VALTIMO_APP_HOSTNAME=http://localhost:4200
+          - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
+          - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
+          - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
+          - VALTIMO_WEB_CORS_PATHS=/**
+      ports:
+          - 8080:8080
+      depends_on:
+          gzac-keycloak:
+              condition: service_healthy
+
+  gzac-demo-frontend:
+      image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
+      container_name: gzac-docker-compose-gzac-frontend
+      profiles:
+          - demo
+      environment:
+          - API_URI=http://localhost:8080/api
+          - KEYCLOAK_URL=http://localhost:8081/auth
+          - KEYCLOAK_REALM=valtimo
+          - KEYCLOAK_CLIENT_ID=valtimo-console
+          - KEYCLOAK_REDIRECT_URI=http://localhost/keycloak/callback
+          - KEYCLOAK_LOGOUT_REDIRECT_URI=http://localhost
+      ports:
+          - 80:8080
+      depends_on:
+          - gzac-backend
 
 volumes:
   gzac-database-data:
