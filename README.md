@@ -17,7 +17,7 @@ Clone and start the full stack (GZAC + ZGW):
 ```shell
 git clone --branch v/13 https://github.com/generiekzaakafhandelcomponent/gzac-docker-compose.git
 cd gzac-docker-compose
-docker compose --profile demo --profile zgw up -d
+docker compose --profile gzac --profile zgw up -d
 ```
 
 ## Profiles
