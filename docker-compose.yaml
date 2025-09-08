@@ -140,7 +140,7 @@ services:
       - openzaak
 
   objecten-api:
-    image: maykinmedia/objects-api:2.1.1 # TODO: later versions don't send notification when an object is created. This breaks the verzoek-plugin. Look into whats wrong
+    image: maykinmedia/objects-api:2.4.4
     container_name: gzac-docker-compose-objecten-api
     platform: linux/amd64
     profiles:
@@ -149,16 +149,34 @@ services:
     ports:
       - "8010:8000"
     environment: &objects-env
+      - DB_USER=objects
+      - DB_PASSWORD=objects
       - CORS_ALLOW_ALL_ORIGINS=true
       - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
       - DJANGO_SETTINGS_MODULE=objects.conf.docker
       - DB_HOST=objecten-api-database
-      - DEBUG=true
-      - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
-      - TWO_FACTOR_PATCH_ADMIN=False
+      - CACHE_DEFAULT=objecten-api-redis:6379/0
+      - CACHE_AXES=objecten-api-redis:6379/0
+      - CELERY_BROKER_URL=redis://objecten-api-redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://objecten-api-redis:6379/1
+      - CELERY_LOGLEVEL=DEBUG
+      - DISABLE_2FA=True
+      - OBJECTS_SUPERUSER_EMAIL=admin@example.org
+      - OBJECTS_SUPERUSER_USERNAME=admin
+      - OBJECTS_SUPERUSER_PASSWORD=admin
       - DEBUG=True
     depends_on:
       - objecten-api-database
+      - objecten-api-redis
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # This should allow for enough time for migrations to run before the max
+      # retries have passed. This healthcheck in turn allows other containers
+      # to wait for the database migrations.
+      start_period: 30s
 
   objecten-api-database:
     image: postgis/postgis:17-3.4
@@ -175,7 +193,7 @@ services:
       - POSTGRES_DB=objects
 
   objecten-api-import:
-    image: maykinmedia/objects-api:2.1.1
+    image: maykinmedia/objects-api:2.4.4
     container_name: gzac-docker-compose-objects-api-import
     platform: linux/amd64
     profiles:
@@ -188,14 +206,30 @@ services:
       - ./imports/objects-api/fixtures:/app/src/objects/fixtures
       - ./imports/objects-api/init:/app/init
     depends_on:
-      - objecten-api
+      objecten-api:
+        condition: service_healthy
 
   objecten-api-redis:
     image: redis:7.4.3
+    command: ["redis-server", "--appendonly", "yes"]
     container_name: gzac-docker-compose-objecten-api-redis
     profiles:
       - zgw
       - objecten
+
+  objecten-api-celery:
+    image: maykinmedia/objects-api:2.4.4
+    environment: *objects-env
+    command: /celery_worker.sh
+    healthcheck:
+      test: ["CMD", "python", "/app/bin/check_celery_worker_liveness.py"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      objecten-api:
+        condition: service_healthy
 
   objecttypen-api:
     image: maykinmedia/objecttypes-api:3.0.2
@@ -515,7 +549,7 @@ services:
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
-      - VALTIMO_PLUGIN_ENCRYPTION-SECRET=abcdefghijklmnop
+      - VALTIMO_PLUGIN_ENCRYPTIONSECRET=abcdefghijklmnop
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
@@ -548,7 +582,7 @@ services:
 
   gzac-demo-backend:
     image: ritense/gzac-evenementenvergunning-demo-backend:12.10.0
-    container_name: gzac-docker-compose-gzac-backend
+    container_name: gzac-docker-compose-gzac-demo-backend
     profiles:
       - demo
     environment:
@@ -559,15 +593,20 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - VALTIMO_APP_HOSTNAME=http://localhost:4200
       - VALTIMO_CONNECTORENCRYPTION_SECRET=579156b12b9a457a579156b12b9a457a
-      - VALTIMO_OAUTH_PUBLIC_KEY=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAooyECQIi6v4TLKOYWwXClDhJcrGcGfKZj7LQIgY/Ajm2nAKv5kiZRoS8GzMzIGKkkilAJyWQCoKlP//azHqzIxO6WZWCqGFxd04vK5JYujsiMMTNvTggfFSM7VxbzU/wv+aAEvBaGUMYp2Oamn5szzYzkzsowujvDZp+CE8ryZWTVmA+8WZE4aoU6VzfXmMDmPxvRXvktPRsJkA7hkv65TTJwUZF38goRg62kRD0hOP1sIy6vwKDSkjafLV1bYNBRiWXNReJNBXauhy74GeiHODGrI62NwUJXSgZ62cViPt6cx/3A7VBPLpEPnpnlZcIDfsFpSUuNEXc7HoLRuldbQIDAQAB
-      - KEYCLOAK_REALM=valtimo
-      - KEYCLOAK_AUTH_SERVER_URL=http://host.docker.internal:8081/auth
-      - KEYCLOAK_RESOURCE=valtimo-user-m2m-client
-      - KEYCLOAK_CREDENTIALS_SECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://host.docker.internal:8081/auth/realms/valtimo/protocol/openid-connect/certs
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKAPI_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAKJWT_ISSUERURI=http://host.docker.internal:8081/auth/realms/valtimo
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKJWT_CLIENTID=valtimo-console
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTID=valtimo-user-m2m-client
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAKAPI_CLIENTSECRET=6ef6ca16-6b86-482a-a3d9-0561704c1db9
+      - VALTIMO_PLUGIN_ENCRYPTIONSECRET=abcdefghijklmnop
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDORIGINS=http://localhost
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDMETHODS=*
       - VALTIMO_WEB_CORS_CORSCONFIGURATION_ALLOWEDHEADERS=*
       - VALTIMO_WEB_CORS_PATHS=/**
+      - VALTIMO_DOCKER_FILTER_ENABLED=true
+      - VALTIMO_DOCKER_FILTER_PORTS=8080,8001,8002,8003,8006,8010,8011
+      - VALTIMO_CHANGELOG_PBAC_CLEARTABLES=false
     ports:
       - 8080:8080
     depends_on:
@@ -576,7 +615,7 @@ services:
 
   gzac-demo-frontend:
     image: ritense/gzac-evenementenvergunning-demo-frontend:12.10.0
-    container_name: gzac-docker-compose-gzac-frontend
+    container_name: gzac-docker-compose-gzac-demo-frontend
     profiles:
       - demo
     environment:
@@ -589,7 +628,7 @@ services:
     ports:
       - 80:8080
     depends_on:
-      - gzac-backend
+      - gzac-demo-backend
 
 volumes:
   gzac-database-data:
