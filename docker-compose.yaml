@@ -235,6 +235,10 @@ services:
     depends_on:
       objecten-api:
         condition: service_healthy
+    profiles:
+      - zgw
+      - objecten
+
 
   objecttypen-api:
     image: maykinmedia/objecttypes-api:3.0.2
