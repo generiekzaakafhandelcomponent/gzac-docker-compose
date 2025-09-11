@@ -19,9 +19,13 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_FEATURES: token-exchange,admin-fine-grained-authz
       KC_HTTP_RELATIVE_PATH: /auth
+      KC_HOSTNAME_STRICT_HTTPS: false
     volumes:
       - ./imports/keycloak:/opt/keycloak/data/import
-    command: "start-dev --import-realm"
+    command:
+      - start-dev
+      - --import-realm
+      - --http-enabled=true
     healthcheck:
       test: [ 'CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth' ]
       interval: 10s
