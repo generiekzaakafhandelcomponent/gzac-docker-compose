@@ -98,7 +98,7 @@ services:
   # ZGW
 
   openzaak:
-    image: openzaak/open-zaak:1.20.0
+    image: openzaak/open-zaak:1.25.0
     container_name: gzac-docker-compose-openzaak
     platform: linux/amd64
     profiles:
@@ -151,7 +151,7 @@ services:
       - openzaak
 
   objecten-api:
-    image: maykinmedia/objects-api:2.4.4
+    image: maykinmedia/objects-api:3.3.0
     container_name: gzac-docker-compose-objecten-api
     platform: linux/amd64
     profiles:
@@ -205,7 +205,7 @@ services:
       - POSTGRES_DB=objects
 
   objecten-api-import:
-    image: maykinmedia/objects-api:2.4.4
+    image: maykinmedia/objects-api:3.3.0
     container_name: gzac-docker-compose-objects-api-import
     platform: linux/amd64
     profiles:
@@ -230,7 +230,7 @@ services:
       - objecten
 
   objecten-api-celery:
-    image: maykinmedia/objects-api:2.4.4
+    image: maykinmedia/objects-api:3.3.0
     environment: *objects-env
     command: /celery_worker.sh
     healthcheck:
@@ -248,7 +248,7 @@ services:
 
 
   objecttypen-api:
-    image: maykinmedia/objecttypes-api:3.0.2
+    image: maykinmedia/objecttypes-api:3.3.0
     container_name: gzac-docker-compose-objecttypen-api
     platform: linux/amd64
     profiles:
@@ -299,7 +299,7 @@ services:
       - POSTGRES_DB=objecttypes
 
   objecttypen-api-import:
-    image: maykinmedia/objecttypes-api:3.0.2
+    image: maykinmedia/objecttypes-api:3.3.0
     container_name: gzac-docker-compose-objecttypen-api-import
     platform: linux/amd64
     profiles:
@@ -324,7 +324,7 @@ services:
       - "15673:15672"
 
   open-notificaties-celery:
-    image: openzaak/open-notificaties:1.8.2
+    image: openzaak/open-notificaties:1.13.0
     container_name: gzac-docker-compose-open-notificaties
     platform: linux/amd64
     profiles:
@@ -356,7 +356,7 @@ services:
       - open-notificaties-redis
 
   open-notificaties:
-    image: openzaak/open-notificaties:1.8.1
+    image: openzaak/open-notificaties:1.13.0
     container_name: gzac-docker-compose-open-notificaties-celery
     platform: linux/amd64
     profiles:
@@ -410,7 +410,7 @@ services:
       - openformulieren
 
   open-forms-web:
-    image: openformulieren/open-forms:3.1.6
+    image: openformulieren/open-forms:3.1.9
     container_name: gzac-docker-compose-open-forms-web
     platform: linux/amd64
     profiles:
@@ -447,7 +447,7 @@ services:
       - open-forms-redis
 
   open-forms-celery:
-    image: openformulieren/open-forms:3.1.6
+    image: openformulieren/open-forms:3.1.9
     container_name: gzac-docker-compose-open-forms-celery
     platform: linux/amd64
     profiles:
@@ -467,7 +467,7 @@ services:
       - open-forms-redis
 
   open-forms-celery-beat:
-    image: openformulieren/open-forms:3.1.6
+    image: openformulieren/open-forms:3.1.9
     container_name: gzac-docker-compose-open-forms-celery-beat
     platform: linux/amd64
     profiles:
@@ -479,7 +479,7 @@ services:
       - open-forms-redis
 
   open-forms-celery-flower:
-    image: openformulieren/open-forms:3.1.6
+    image: openformulieren/open-forms:3.1.9
     container_name: gzac-docker-compose-open-forms-celery-flower
     platform: linux/amd64
     profiles:
@@ -502,7 +502,7 @@ services:
       - ./imports/open-formulieren/private_media:/private_media
 
   open-klant:
-    image: maykinmedia/open-klant:2.10.0
+    image: maykinmedia/open-klant:2.13.0
     container_name: gzac-docker-compose-open-klant
     platform: linux/amd64
     profiles:
@@ -543,7 +543,7 @@ services:
       - openklant
 
   gzac-backend:
-    image: ritense/gzac-backend:13.1.2
+    image: ritense/gzac-backend:13.2.1
     container_name: gzac-docker-compose-gzac-backend
     profiles:
       - gzac
@@ -575,7 +575,7 @@ services:
         condition: service_healthy
 
   gzac-frontend:
-    image: ritense/gzac-frontend:13.1.2
+    image: ritense/gzac-frontend:13.2.1
     container_name: gzac-docker-compose-gzac-frontend
     profiles:
       - gzac
