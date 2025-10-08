@@ -57,6 +57,8 @@ services:
   gzac-database-mysql:
     container_name: gzac-docker-compose-gzac-database-mysql
     image: mysql/mysql-server:8.0.28-1.2.7-server
+    profiles:
+      - mysql
     ports:
       - "33060:3306"
     environment:
@@ -79,7 +81,7 @@ services:
       - gzac-database-data-mysql:/var/lib/mysql # persist data even if container shuts down
 
   gzac-rabbitmq:
-    image: rabbitmq:4.1.0-management
+    image: rabbitmq:4.1-management
     container_name: gzac-docker-compose-gzac-rabbitmq
     volumes:
       - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -144,7 +146,7 @@ services:
       - ./imports/open-zaak:/docker-entrypoint-initdb.d
 
   openzaak-redis:
-    image: redis:7.4.3
+    image: redis:8.2.2
     container_name: gzac-docker-compose-openzaak-redis
     profiles:
       - zgw
@@ -222,7 +224,7 @@ services:
         condition: service_healthy
 
   objecten-api-redis:
-    image: redis:7.4.3
+    image: redis:8.2.2
     command: [ "redis-server", "--appendonly", "yes" ]
     container_name: gzac-docker-compose-objecten-api-redis
     profiles:
@@ -384,7 +386,7 @@ services:
       - ./imports/open-notificaties:/docker-entrypoint-initdb.d
 
   open-notificaties-redis:
-    image: redis:7.4.3
+    image: redis:8.2.2
     container_name: gzac-docker-compose-open-notificaties-redis
     profiles:
       - zgw
@@ -403,7 +405,7 @@ services:
       - ./imports/open-formulieren:/docker-entrypoint-initdb.d
 
   open-forms-redis:
-    image: redis:7.4.3
+    image: redis:8.2.2
     container_name: gzac-docker-compose-open-forms-redis
     command: [ "redis-server", "--appendonly", "yes" ]
     profiles:
@@ -537,7 +539,7 @@ services:
       - ./imports/open-klanten:/docker-entrypoint-initdb.d
 
   open-klant-redis:
-    image: redis:7.4.3
+    image: redis:8.2.2
     container_name: gzac-docker-compose-open-klant-redis
     profiles:
       - openklant
