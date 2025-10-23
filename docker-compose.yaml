@@ -594,7 +594,7 @@ services:
       - gzac-backend
 
   gzac-demo-backend:
-    image: ritense/gzac-evenementenvergunning-demo-backend:13.1.2
+    image: ritense/gzac-evenementenvergunning-demo-backend:13.4.1
     container_name: gzac-docker-compose-gzac-demo-backend
     profiles:
       - demo
@@ -630,7 +630,7 @@ services:
           - gzac-backend
 
   gzac-demo-frontend:
-    image: ritense/gzac-evenementenvergunning-demo-frontend:13.1.2
+    image: ritense/gzac-evenementenvergunning-demo-frontend:13.4.1
     container_name: gzac-docker-compose-gzac-demo-frontend
     profiles:
       - demo
