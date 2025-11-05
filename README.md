@@ -43,12 +43,14 @@ docker compose --profile demo up -d
 Start GZAC plus all ZGW-related services:
 
 ```shell
-# with regular data
+# with regular data (defaults to postgres database)
 docker compose --profile gzac --profile zgw up -d
+
+# with regular data and mysql database
+docker compose --profile gzac --profile zgw --profile mysql up -d
 
 # with demo data
 docker compose --profile demo --profile zgw up -d
-
 ```
 
 ## Service URLs & Ports
@@ -56,7 +58,7 @@ docker compose --profile demo --profile zgw up -d
 ### Core GZAC stack
 
 | Service                  | URL / Port                                       |
-|--------------------------|--------------------------------------------------|
+|--------------------------|:-------------------------------------------------|
 | gzac-frontend            | [http://localhost:80](http://localhost:80)       |
 | gzac-backend             | [http://localhost:8080](http://localhost:8080)   |
 | gzac-database (Postgres) | localhost:54320                                  |
@@ -69,7 +71,7 @@ docker compose --profile demo --profile zgw up -d
 ### Additional ZGW services (with --profile zgw)
 
 | Service                           | URL / Port                                       |
-|-----------------------------------|--------------------------------------------------|
+|-----------------------------------|:-------------------------------------------------|
 | objecten-api-database             | localhost:54321                                  |
 | objecten-api                      | [http://localhost:8010](http://localhost:8010)   |
 | objecttypen-api-database          | localhost:54324                                  |
