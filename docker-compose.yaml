@@ -81,7 +81,7 @@ services:
       - gzac-database-data-mysql:/var/lib/mysql # persist data even if container shuts down
 
   gzac-rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:4.1-management
     container_name: gzac-docker-compose-gzac-rabbitmq
     volumes:
       - ./imports/gzac-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -89,6 +89,13 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    environment:
+      RABBITMQ_CONFIG_FILE: /etc/rabbitmq/rabbitmq.conf
+    command: >
+      bash -c "
+        rabbitmq-plugins enable --offline rabbitmq_stream rabbitmq_stream_management &&
+        rabbitmq-server
+      "
 
   # ZGW
 
