@@ -15,7 +15,7 @@ Spin up a complete **GZAC** development stack with Docker Compose.
 Clone and start the full stack (GZAC + ZGW):
 
 ```shell
-git clone https://github.com/generiekzaakafhandelcomponent/gzac-docker-compose.git
+git clone --branch v/12 https://github.com/generiekzaakafhandelcomponent/gzac-docker-compose.git
 cd gzac-docker-compose
 docker compose --profile gzac --profile zgw up -d
 ```
@@ -57,6 +57,10 @@ docker compose --profile demo --profile zgw up -d
 
 ### Core GZAC stack
 
+```shell
+docker compose --profile gzac up -d
+```
+
 | Service                  | URL / Port                                       |
 |--------------------------|:-------------------------------------------------|
 | gzac-frontend            | [http://localhost:80](http://localhost:80)       |
@@ -68,7 +72,32 @@ docker compose --profile demo --profile zgw up -d
 | gzac-rabbitmq (AMQP)     | localhost:5672                                   |
 | gzac-rabbitmq (Mgmt)     | [http://localhost:15672](http://localhost:15672) |
 
-### Additional ZGW services (with --profile zgw)
+### Additional ZGW services
+
+```shell
+docker compose --profile gzac --profile zgw up -d
+```
+
+| Service                           | URL / Port                                       |
+|-----------------------------------|:-------------------------------------------------|
+| objecten-api-database             | localhost:54321                                  |
+| objecten-api                      | [http://localhost:8010](http://localhost:8010)   |
+| objecttypen-api-database          | localhost:54324                                  |
+| objecttypen-api                   | [http://localhost:8011](http://localhost:8011)   |
+| open-notificaties-rabbitmq (AMQP) | localhost:5673                                   |
+| open-notificaties-rabbitmq (Mgmt) | [http://localhost:15673](http://localhost:15673) |
+| open-notificaties-database        | localhost:54319                                  |
+| open-notificaties-celery          | [http://localhost:8002](http://localhost:8002)   |
+| openzaak-database                 | localhost:5433                                   |
+| openzaak                          | [http://localhost:8001](http://localhost:8001)   |
+
+> Ports can be changed in the compose file; update any dependent env if you do.
+
+### Additional OpenKlant and OpenFormulieren
+
+```shell
+docker compose --profile gzac --profile zgw --profile openklant --profile openformulieren up -d
+```
 
 | Service                           | URL / Port                                       |
 |-----------------------------------|:-------------------------------------------------|
